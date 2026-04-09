@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作業指示書制作</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0c0c0e;
+  --surface: #141416;
+  --surface2: #1d1d21;
+  --surface3: #252529;
+  --border: #28282e;
+  --border2: #38383f;
+  --text: #ededf0;
+  --text2: #909099;
+  --text3: #50505c;
+  --accent: #6c5ce7;
+  --accent2: #a29bfe;
+  --accent-dim: rgba(108,92,231,0.12);
+  --accent-glow: rgba(108,92,231,0.25);
+  --danger: #e74c3c;
+  --danger-dim: rgba(231,76,60,0.1);
+  --danger-bright: #ff6b6b;
+  --success: #00b894;
+  --warn: #fdcb6e;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ===== HEADER ===== */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-mark {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 0 14px var(--accent-glow);
+}
+.header-actions { display: flex; gap: 8px; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn:hover { background: var(--surface2); }
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+.btn-primary:hover { background: #5a4dd6; border-color: #5a4dd6; }
+
+/* ===== MAIN LAYOUT ===== */
+main {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  flex: 1;
+  height: calc(100vh - 56px);
+  overflow: hidden;
+}
+
+/* ===== FORM PANEL ===== */
+.form-panel {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-block {
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--border2);
+  border-radius: 0;
+  padding-bottom: 1.8rem;
+}
+.form-block:last-child {
+  border-bottom: none;
+}
+.form-block-header {
+  padding: 0 0 12px 0;
+  border-bottom: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.form-block-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+.form-block-body {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+label {
+  font-size: 0.78rem;
+  color: var(--text2);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.req { color: var(--danger-bright); font-size: 0.7rem; }
+
+input[type=text], input[type=date], input[type=number],
+select, textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.85rem;
+  padding: 8px 11px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  resize: vertical;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+select option { background: var(--surface2); }
+::placeholder { color: var(--text3); }
+textarea { resize: none; }
+
+/* ===== TYPE SELECTOR ===== */
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.type-card {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.type-card:hover { border-color: var(--accent2); }
+.type-card.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.type-card-icon { font-size: 20px; }
+.type-card-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text2);
+}
+.type-card.active .type-card-label { color: var(--accent2); }
+
+/* ===== DYNAMIC FORM SECTIONS ===== */
+.dynamic-section { display: none; }
+.dynamic-section.visible { display: flex; flex-direction: column; gap: 10px; }
+
+.dynamic-block {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+.dynamic-block-header {
+  background: transparent;
+  border-bottom: none;
+  padding: 12px 14px 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dynamic-block-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.dynamic-block-body {
+  padding: 8px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== NG BLOCK ===== */
+.ng-form-block {
+  background: var(--surface2);
+  border: 1px solid rgba(231,76,60,0.3);
+  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--danger);
+  overflow: hidden;
+}
+.ng-form-header {
+  padding: 10px 14px;
+  background: rgba(231,76,60,0.08);
+  border-bottom: 1px solid rgba(231,76,60,0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ng-form-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--danger-bright);
+}
+.ng-form-body { padding: 14px; }
+.ng-form-body textarea {
+  border-color: rgba(231,76,60,0.3);
+}
+.ng-form-body textarea:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.12);
+}
+
+/* ===== COLOR PALETTE ===== */
+.color-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.color-swatch {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+.color-swatch input[type=color] {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.01;
+}
+.color-swatch-preview {
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.add-color-btn {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  border: 1px dashed var(--border2);
+  background: transparent;
+  color: var(--text3);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.add-color-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+/* ===== UPLOAD ZONE ===== */
+.upload-zone {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.upload-zone input { display: none; }
+.upload-icon { font-size: 24px; margin-bottom: 6px; }
+.upload-text { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+.upload-text strong { color: var(--accent2); }
+
+.image-previews {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.preview-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.preview-item img { width: 100%; height: 100%; object-fit: contain; background: #000; }
+.remove-img {
+  position: absolute;
+  top: 3px; right: 3px;
+  background: rgba(0,0,0,0.75);
+  border: none;
+  color: #fff;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== PREVIEW PANEL ===== */
+.preview-panel {
+  overflow-y: auto;
+  background: var(--bg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.preview-label-top {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  align-self: flex-start;
+}
+
+/* ===== SPEC DOCUMENT ===== */
+.spec-doc {
+  background: #ffffff;
+  color: #1a1a2a;
+  width: 100%;
+  max-width: 720px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.5);
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* Spec Header */
+.spec-header {
+  background: #0f0f1e;
+  padding: 2.5rem 2.5rem 2rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.spec-header::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(108,92,231,0.35) 0%, transparent 65%);
+  pointer-events: none;
+}
+.spec-header::before {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(162,155,254,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.spec-type-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #a29bfe;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.spec-type-badge::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: #a29bfe;
+}
+.spec-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.spec-meta-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.spec-meta-item {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.45);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.spec-meta-item strong { color: rgba(255,255,255,0.75); }
+
+/* Spec Body */
+.spec-body { padding: 2rem 2.5rem 2.5rem; }
+
+.spec-section { margin-bottom: 2rem; }
+.spec-section-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6c5ce7;
+  font-weight: 500;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid #eeeef8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Info grid */
+.spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.spec-field {
+  padding: 0.75rem 1rem;
+  background: #f7f7fb;
+  border-radius: 8px;
+  border: 1px solid #ededf5;
+}
+.spec-field.full { grid-column: 1 / -1; }
+.spec-field-label {
+  font-size: 0.67rem;
+  color: #9090b0;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+.spec-field-value {
+  font-size: 0.88rem;
+  color: #1a1a2a;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Badge */
+.spec-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 30px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.badge-high { background: #fee2e2; color: #c0392b; }
+.badge-medium { background: #fef3c7; color: #d97706; }
+.badge-low { background: #dcfce7; color: #16a34a; }
+
+/* Dynamic spec fields — bullet-list style */
+.spec-detail-block {
+  background: #f7f7fb;
+  border: 1px solid #ededf5;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.spec-detail-block-header {
+  padding: 7px 12px;
+  background: #f0f0f8;
+  border-bottom: 1px solid #ededf5;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #6c5ce7;
+  letter-spacing: 0.06em;
+}
+.spec-detail-value {
+  padding: 8px 12px;
+  font-size: 0.87rem;
+  color: #2a2a3e;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* NG Section — HIGH VISIBILITY */
+.spec-ng-section {
+  background: #fff5f5;
+  border: 2px solid #f5c6c6;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.spec-ng-header {
+  background: #e74c3c;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.spec-ng-header-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.spec-ng-body {
+  padding: 14px 16px;
+}
+.spec-ng-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.spec-ng-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #c0392b;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.spec-ng-item::before {
+  content: '✗';
+  color: #e74c3c;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.spec-ng-empty {
+  font-size: 0.82rem;
+  color: #e74c3c;
+  font-style: italic;
+  opacity: 0.6;
+}
+
+/* Colors */
+.spec-palette {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.spec-color-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.spec-color-swatch {
+  width: 44px; height: 44px;
+  border-radius: 9px;
+  border: 1px solid rgba(0,0,0,0.07);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.spec-color-hex {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: #9090b0;
+}
+
+/* Images */
+.spec-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.spec-image-wrap { display: flex; flex-direction: column; gap: 4px; }
+.spec-image-item {
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid #ededf5;
+}
+.spec-image-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.spec-image-caption { font-size: 0.68rem; color: #9090b0; text-align: center; }
+
+/* Checklist */
+.spec-checklist { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.spec-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: #2a2a3e;
+  padding: 8px 12px;
+  background: #f7f7fb;
+  border-radius: 7px;
+  border: 1px solid #ededf5;
+}
+.spec-checklist li::before {
+  content: '☐';
+  color: #6c5ce7;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Notes */
+.spec-notes {
+  background: #f7f7fb;
+  border: 1px solid #ededf5;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: 0.87rem;
+  line-height: 1.8;
+  color: #3a3a4e;
+  white-space: pre-wrap;
+}
+
+/* Empty state */
+.spec-empty {
+  font-size: 0.82rem;
+  color: #c8c8d8;
+  font-style: italic;
+}
+
+/* Footer */
+.spec-footer {
+  background: #f4f4fa;
+  border-top: 1px solid #ededf5;
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: #9090b0;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ===== PRINT ===== */
+@media print {
+  body { background: white; }
+  header, .form-panel, .preview-label-top { display: none !important; }
+  main { display: block; height: auto; overflow: visible; }
+  .preview-panel { padding: 0; background: white; }
+  .spec-doc { box-shadow: none; border-radius: 0; max-width: 100%; width: 100%; }
+  .spec-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-section-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-field { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-color-swatch { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-ng-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-ng-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .spec-detail-block-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">✦</div>
+    作業指示書 Generator
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="clearForm()">🗑 クリア</button>
+<button class="btn btn-primary" onclick="downloadPDF()">📄 PDF出力</button>
+</div>
+</header>
+
+<main>
+<!-- ======================== FORM PANEL ======================== -->
+<div class="form-panel">
+
+  <!-- 基本情報 -->
+<div class="form-block">
+    <div class="form-block-header">
+      <span class="block-icon">📋</span>
+      <span class="form-block-title">基本情報</span>
+    </div>
+    <div class="form-block-body">
+      <div class="field">
+        <label>案件名 / プロジェクト名 <span class="req">必須</span></label>
+        <input type="text" id="f-title" placeholder="例：新商品ティザー動画制作、キャラクターイラスト依頼" oninput="update()">
+      </div>
+      <div class="field">
+        <label>使用用途</label>
+        <input type="text" id="f-purpose" placeholder="例：YouTube配信の待機画面用、SNS投稿用" oninput="update()">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>納期</label>
+          <input type="date" id="f-deadline" oninput="update()">
+        </div>
+        <div class="field">
+          <label>優先度</label>
+          <select id="f-priority" onchange="update()">
+            <option value="">選択してください</option>
+            <option value="high">🔴 高</option>
+            <option value="medium">🟡 中</option>
+            <option value="low">🟢 低</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 制作領域 -->
+  <div class="form-block">
+    <div class="form-block-header">
+      <span class="block-icon">🎯</span>
+      <span class="form-block-title">制作領域を選択</span>
+    </div>
+    <div class="form-block-body">
+      <div class="type-grid">
+        <div class="type-card" onclick="selectType('illust', this)">
+          <span class="type-card-icon">🎨</span>
+          <span class="type-card-label">イラスト制作</span>
+        </div>
+        <div class="type-card" onclick="selectType('3dcg', this)">
+          <span class="type-card-icon">🧊</span>
+          <span class="type-card-label">3DCG制作</span>
+        </div>
+        <div class="type-card" onclick="selectType('video', this)">
+          <span class="type-card-icon">🎬</span>
+          <span class="type-card-label">動画制作</span>
+        </div>
+        <div class="type-card" onclick="selectType('image', this)">
+          <span class="type-card-icon">🖼</span>
+          <span class="type-card-label">画像加工</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DYNAMIC: ILLUST ===== -->
+  <div class="dynamic-section" id="dyn-illust">
+    <!-- 被写体・キャラクター -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🧑‍🎨</span>
+        <span class="dynamic-block-title">被写体・キャラクター</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>年齢・性別</label>
+          <input type="text" id="i-age" placeholder="例：17歳女性、年齢不詳の少年" oninput="update()">
+        </div>
+        <div class="field">
+          <label>服装・外見</label>
+          <input type="text" id="i-outfit" placeholder="例：黒いセーラー服、魔法使いのローブ、金髪ショートカット" oninput="update()">
+        </div>
+        <div class="field">
+          <label>表情</label>
+          <input type="text" id="i-expression" placeholder="例：笑顔、少し困った表情、凛とした無表情" oninput="update()">
+        </div>
+        <div class="field">
+          <label>ポーズ・動き</label>
+          <input type="text" id="i-pose" placeholder="例：右手を上げて振っている、椅子に座って本を読んでいる" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 世界観 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🌍</span>
+        <span class="dynamic-block-title">世界観・トンマナ</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>世界観・ジャンル</label>
+          <input type="text" id="i-world" placeholder="例：ファンタジー、サイバーパンク、日常系、和風" oninput="update()">
+        </div>
+        <div class="field">
+          <label>雰囲気・トーン</label>
+          <input type="text" id="i-tone" placeholder="例：明るくポップ、ダークで重厚感、ゆるくかわいい" oninput="update()">
+        </div>
+        <div class="field">
+          <label>参考作品・スタイル</label>
+          <input type="text" id="i-ref" placeholder="例：◯◯のような作風、アニメ塗り、水彩風" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 構図・アングル -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">📐</span>
+        <span class="dynamic-block-title">構図・アングル</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>画角・切り取り範囲</label>
+          <input type="text" id="i-framing" placeholder="例：バストアップ、全身、顔アップ、ひざ上" oninput="update()">
+        </div>
+        <div class="field">
+          <label>アングル・視点</label>
+          <input type="text" id="i-angle" placeholder="例：正面、斜め45°、俯瞰（見下ろし）、仰角（見上げ）" oninput="update()">
+        </div>
+        <div class="field">
+          <label>背景の有無・内容</label>
+          <input type="text" id="i-bg" placeholder="例：背景なし（透過）、シンプルなグラデーション、街並み" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- ライティング・色彩 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🌈</span>
+        <span class="dynamic-block-title">ライティング・色彩</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>光の方向・種類</label>
+          <input type="text" id="i-light" placeholder="例：順光（正面から）、逆光（シルエット気味）、夕暮れの光" oninput="update()">
+        </div>
+        <div class="field">
+          <label>色彩・カラーイメージ</label>
+          <input type="text" id="i-color" placeholder="例：パステル調、寒色系（青・紫）、暖色系（赤・オレンジ）" oninput="update()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DYNAMIC: 3DCG ===== -->
+  <div class="dynamic-section" id="dyn-3dcg">
+    <!-- ターゲット環境 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🖥</span>
+        <span class="dynamic-block-title">ターゲット環境</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>使用プラットフォーム・用途</label>
+          <input type="text" id="c-platform" placeholder="例：VRChat用アバター、Unity用ゲームキャラ、映像作品用" oninput="update()">
+        </div>
+        <div class="field">
+          <label>使用ソフトウェア</label>
+          <input type="text" id="c-software" placeholder="例：Blender、Maya、Cinema 4D、3ds Max" oninput="update()">
+        </div>
+        <div class="field">
+          <label>レンダラー</label>
+          <input type="text" id="c-renderer" placeholder="例：Cycles、EEVEE、Arnold、V-Ray" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 仕様制限 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">📊</span>
+        <span class="dynamic-block-title">仕様・ポリゴン制限</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>ポリゴン数の目安（ポリ数制限）</label>
+          <input type="text" id="c-poly" placeholder="例：ローポリ（5,000以下）、ハイポリ（制限なし）、VRC推奨（70,000以下）" oninput="update()">
+        </div>
+        <div class="field">
+          <label>テクスチャサイズ・枚数制限</label>
+          <input type="text" id="c-texture" placeholder="例：2048×2048、最大4枚まで、アトラス化必須" oninput="update()">
+        </div>
+        <div class="field">
+          <label>ファイル形式・書き出し形式</label>
+          <input type="text" id="c-fileformat" placeholder="例：FBX、OBJ、.blend、Unityパッケージ形式" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- マテリアル・シェーダー -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">✨</span>
+        <span class="dynamic-block-title">マテリアル・シェーダー</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>シェーダーの種類</label>
+          <input type="text" id="c-shader" placeholder="例：PBR（リアル系）、トゥーンシェーダー（アニメ調）、Lillyth" oninput="update()">
+        </div>
+        <div class="field">
+          <label>マテリアルの仕上がりイメージ</label>
+          <input type="text" id="c-material" placeholder="例：金属光沢あり、マット仕上げ、半透明の布素材" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- トポロジー・リギング -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🦴</span>
+        <span class="dynamic-block-title">トポロジー・リギング</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>ボーン・リグの要件</label>
+          <input type="text" id="c-rig" placeholder="例：Humanoidボーン必須、Unity標準ボーン構成、カスタムボーンOK" oninput="update()">
+        </div>
+        <div class="field">
+          <label>ブレンドシェイプ（表情モーフ）</label>
+          <input type="text" id="c-morph" placeholder="例：VRChat基本表情7種必須、口・目・眉のモーフ" oninput="update()">
+        </div>
+        <div class="field">
+          <label>トポロジーの注意点</label>
+          <input type="text" id="c-topo" placeholder="例：関節部は四角面で構成、Nゴン不可、辺の流れを意識" oninput="update()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DYNAMIC: VIDEO ===== -->
+  <div class="dynamic-section" id="dyn-video">
+    <!-- 尺・テンポ -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">⏱</span>
+        <span class="dynamic-block-title">尺・テンポ</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>全体の長さ（尺）</label>
+          <input type="text" id="v-duration" placeholder="例：15秒、30秒、60秒、2分程度" oninput="update()">
+        </div>
+        <div class="field">
+          <label>テンポ・切り替わりのスピード感</label>
+          <input type="text" id="v-tempo" placeholder="例：テンポ良く速い切り替わり、ゆっくり落ち着いた展開" oninput="update()">
+        </div>
+        <div class="field">
+          <label>フレームレート（fps）</label>
+          <input type="text" id="v-fps" placeholder="例：30fps、60fps" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 構成・タイムライン -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">📋</span>
+        <span class="dynamic-block-title">構成・タイムライン</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>シーン構成・タイムラインの流れ</label>
+          <textarea id="v-timeline" rows="4" placeholder="例：&#10;0〜3秒：ロゴイン（ブランドロゴがフェードイン）&#10;3〜10秒：商品のアップカット3パターン&#10;10〜15秒：キャッチコピー＋購買ボタン表示" oninput="update()"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- 演出要素 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🎭</span>
+        <span class="dynamic-block-title">演出要素</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>トランジション（場面転換の方法）</label>
+          <input type="text" id="v-transition" placeholder="例：カット（直接切り替え）、クロスフェード、スライド" oninput="update()">
+        </div>
+        <div class="field">
+          <label>テロップ（文字）のデザインと動き</label>
+          <input type="text" id="v-caption" placeholder="例：右からスライドイン、フェードイン、明朝体ゴールド色" oninput="update()">
+        </div>
+        <div class="field">
+          <label>エフェクト・特殊演出</label>
+          <input type="text" id="v-effect" placeholder="例：グリッチエフェクト、パーティクル演出、ブラー効果" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 音声 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🎵</span>
+        <span class="dynamic-block-title">音声・BGM</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>BGMの雰囲気</label>
+          <input type="text" id="v-bgm" placeholder="例：アップテンポなポップス、落ち着いたジャズ、BGMなし" oninput="update()">
+        </div>
+        <div class="field">
+          <label>SE（効果音）のタイミング・種類</label>
+          <input type="text" id="v-se" placeholder="例：ロゴ登場時にシャキーン音、ボタン押下時にクリック音" oninput="update()">
+        </div>
+        <div class="field">
+          <label>ナレーション・音声の有無</label>
+          <input type="text" id="v-voice" placeholder="例：なし、テキスト読み上げ（女性）、BGMのみ" oninput="update()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DYNAMIC: IMAGE ===== -->
+  <div class="dynamic-section" id="dyn-image">
+    <!-- 元画像の状況 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🖼</span>
+        <span class="dynamic-block-title">元画像の状況</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>元画像の問題点・現状</label>
+          <textarea id="m-source" rows="3" placeholder="例：&#10;・全体的に暗く、人物の顔が見えにくい&#10;・背景に不要な人物が写り込んでいる&#10;・ピントが少しぼけている" oninput="update()"></textarea>
+        </div>
+        <div class="field">
+          <label>元画像ファイルの形式・解像度</label>
+          <input type="text" id="m-srcformat" placeholder="例：JPG、3000×4000px、スマホ撮影" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 加工の目的 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">🎯</span>
+        <span class="dynamic-block-title">加工の目的</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>何のための加工か</label>
+          <input type="text" id="m-goal" placeholder="例：ECサイト掲載用、SNS投稿用、印刷用チラシ" oninput="update()">
+        </div>
+        <div class="field">
+          <label>加工の種類・カテゴリ</label>
+          <input type="text" id="m-type" placeholder="例：色調補正、背景合成、人物切り抜き、エフェクト追加" oninput="update()">
+        </div>
+      </div>
+    </div>
+    <!-- 具体的な処理 -->
+    <div class="dynamic-block">
+      <div class="dynamic-block-header">
+        <span class="block-icon">⚙️</span>
+        <span class="dynamic-block-title">具体的な処理内容</span>
+      </div>
+      <div class="dynamic-block-body">
+        <div class="field">
+          <label>具体的にしてほしい加工・処理</label>
+          <textarea id="m-process" rows="4" placeholder="例：&#10;① 背景を透過（PNG書き出し）&#10;② 肌のトーンを明るく補正&#10;③ 右下の看板を消去&#10;④ 全体の彩度を少し上げる" oninput="update()"></textarea>
+        </div>
+        <div class="field">
+          <label>仕上がりのイメージ・参考</label>
+          <input type="text" id="m-finish" placeholder="例：清潔感のある白背景合成、雑誌グラビアのような発色" oninput="update()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 技術仕様（共通） -->
+  <div class="form-block">
+    <div class="form-block-header">
+      <span class="block-icon">📐</span>
+      <span class="form-block-title">技術仕様・サイズ</span>
+    </div>
+    <div class="form-block-body">
+      <div class="field-row">
+        <div class="field">
+          <label>幅 (px)</label>
+          <input type="number" id="f-width" placeholder="例：1920" oninput="update()">
+        </div>
+        <div class="field">
+          <label>高さ (px)</label>
+          <input type="number" id="f-height" placeholder="例：1080" oninput="update()">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>解像度 / fps</label>
+          <input type="text" id="f-resolution" placeholder="例：72dpi / 60fps" oninput="update()">
+        </div>
+        <div class="field">
+          <label>納品フォーマット</label>
+          <input type="text" id="f-format" placeholder="例：PNG / PSD / MP4" oninput="update()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NG事項 -->
+  <div class="ng-form-block">
+    <div class="ng-form-header">
+      <span>🚫</span>
+      <span class="ng-form-title">NG事項・絶対に避けてほしいこと</span>
+    </div>
+    <div class="ng-form-body">
+      <div class="field">
+        <label style="color:#e74c3c;">1行ずつ具体的に書いてください（1行＝1NG項目）</label>
+        <textarea id="f-ng" rows="4" placeholder="例：&#10;性的な表現・露出の多い服装&#10;暗い・重い色調（ネイビー・黒は使用不可）&#10;競合他社ブランドのロゴや商品名" oninput="update()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="form-block">
+    <div class="form-block-header">
+      <span class="block-icon">🖼</span>
+      <span class="form-block-title">参考画像・素材</span>
+    </div>
+    <div class="form-block-body">
+      <div class="upload-zone" id="uploadZone"
+        onclick="document.getElementById('fileInput').click()"
+        ondragover="ev.preventDefault(); this.classList.add('dragover')"
+        ondragleave="this.classList.remove('dragover')"
+        ondrop="handleDrop(event)">
+        <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(event)">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">
+          <strong>クリックまたはD&D</strong>で画像を追加<br>
+          参考画像・素材・ロゴなど（PNG / JPG / GIF）
+        </div>
+      </div>
+      <div class="image-previews" id="imagePreviews"></div>
+    </div>
+  </div>
+
+  <!-- 参考URL -->
+     <div class="field">
+        <label>参考URL（複数ある場合は改行してください）</label>
+        <textarea id="f-refurl" rows="3" placeholder="https://example.com/1&#10;https://example.com/2" oninput="update()"></textarea>
+      </div>
+
+  <!-- 納品・備考 -->
+  <div class="form-block">
+    <div class="form-block-header">
+      <span class="block-icon">📦</span>
+      <span class="form-block-title">納品・備考</span>
+    </div>
+    <div class="form-block-body">
+      <div class="field">
+        <label>納品物チェックリスト（1行1アイテム）</label>
+        <textarea id="f-deliverables" rows="3" placeholder="例：&#10;最終データ（PSD）&#10;書き出しデータ（PNG 透過・白背景の2種）&#10;修正対応3回まで" oninput="update()"></textarea>
+      </div>
+      <div class="field">
+        <label>その他 備考・連絡事項</label>
+        <textarea id="f-notes" rows="3" placeholder="素材の有無、参考URL、注意事項、その他伝えたいこと" oninput="update()"></textarea>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /form-panel -->
+
+<!-- ======================== PREVIEW PANEL ======================== -->
+<div class="preview-panel">
+  <div class="preview-label-top">▸ 仕様書プレビュー — リアルタイム更新</div>
+
+  <div class="spec-doc" id="specDoc">
+
+    <!-- Header -->
+    <div class="spec-header">
+      <div class="spec-type-badge" id="s-type">CREATIVE SPECIFICATION</div>
+      <h1 id="s-title">案件名を入力してください</h1>
+     <div class="spec-meta-row">
+        <div class="spec-meta-item" id="s-meta-deadline" style="display:none;">
+          <span>📅</span><strong id="s-deadline"></strong>
+        </div>
+        <div class="spec-meta-item">
+          <span>📄</span>作成：<strong id="s-created"></strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-body">
+
+      <div class="spec-section">
+        <div class="spec-section-title">基本情報</div>
+        <div class="spec-grid">
+          <div class="spec-field full">
+            <div class="spec-field-label">使用用途</div>
+            <div class="spec-field-value" id="s-purpose-v">—</div>
+          </div>
+
+          <div class="spec-field">
+            <div class="spec-field-label">納期</div>
+            <div class="spec-field-value" id="s-deadline-v">—</div>
+          </div>
+          <div class="spec-field">
+            <div class="spec-field-label">優先度</div>
+            <div class="spec-field-value" id="s-priority-v">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 技術仕様 -->
+      <div class="spec-section" id="s-spec-section">
+        <div class="spec-section-title">技術仕様・サイズ</div>
+        <div class="spec-grid">
+          <div class="spec-field">
+            <div class="spec-field-label">サイズ</div>
+            <div class="spec-field-value" id="s-size-v">—</div>
+          </div>
+          <div class="spec-field">
+            <div class="spec-field-label">解像度 / fps</div>
+            <div class="spec-field-value" id="s-res-v">—</div>
+          </div>
+          <div class="spec-field full">
+            <div class="spec-field-label">納品フォーマット</div>
+            <div class="spec-field-value" id="s-format-v">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== DYNAMIC PREVIEW: ILLUST ===== -->
+      <div class="spec-section" id="sp-illust" style="display:none;">
+        <div class="spec-section-title">🎨 イラスト詳細仕様</div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">被写体・キャラクター</div>
+          <div class="spec-detail-value" id="sp-i-char"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">世界観・トンマナ</div>
+          <div class="spec-detail-value" id="sp-i-world"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">構図・アングル・背景</div>
+          <div class="spec-detail-value" id="sp-i-comp"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">ライティング・色彩</div>
+          <div class="spec-detail-value" id="sp-i-light"></div>
+        </div>
+      </div>
+
+      <!-- ===== DYNAMIC PREVIEW: 3DCG ===== -->
+      <div class="spec-section" id="sp-3dcg" style="display:none;">
+        <div class="spec-section-title">🧊 3DCG詳細仕様</div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">ターゲット環境・ソフトウェア</div>
+          <div class="spec-detail-value" id="sp-c-env"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">仕様・ポリゴン制限</div>
+          <div class="spec-detail-value" id="sp-c-spec"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">マテリアル・シェーダー</div>
+          <div class="spec-detail-value" id="sp-c-mat"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">トポロジー・リギング</div>
+          <div class="spec-detail-value" id="sp-c-rig"></div>
+        </div>
+      </div>
+
+      <!-- ===== DYNAMIC PREVIEW: VIDEO ===== -->
+      <div class="spec-section" id="sp-video" style="display:none;">
+        <div class="spec-section-title">🎬 動画詳細仕様</div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">尺・テンポ</div>
+          <div class="spec-detail-value" id="sp-v-tempo"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">構成・タイムライン</div>
+          <div class="spec-detail-value" id="sp-v-timeline"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">演出要素</div>
+          <div class="spec-detail-value" id="sp-v-effect"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">音声・BGM</div>
+          <div class="spec-detail-value" id="sp-v-audio"></div>
+        </div>
+      </div>
+
+      <!-- ===== DYNAMIC PREVIEW: IMAGE ===== -->
+      <div class="spec-section" id="sp-image" style="display:none;">
+        <div class="spec-section-title">🖼 画像加工詳細仕様</div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">元画像の状況</div>
+          <div class="spec-detail-value" id="sp-m-source"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">加工の目的・種類</div>
+          <div class="spec-detail-value" id="sp-m-goal"></div>
+        </div>
+        <div class="spec-detail-block">
+          <div class="spec-detail-block-header">具体的な処理内容</div>
+          <div class="spec-detail-value" id="sp-m-process"></div>
+        </div>
+      </div>
+
+      <!-- NG事項（常時表示・最目立つ） -->
+      <div class="spec-section">
+        <div class="spec-section-title">禁止・NG事項</div>
+        <div class="spec-ng-section">
+          <div class="spec-ng-header">
+            <span>🚫</span>
+            <span class="spec-ng-header-text">以下は絶対に行わないこと — DO NOT</span>
+          </div>
+          <div class="spec-ng-body">
+            <div class="spec-ng-items" id="s-ng-items">
+              <div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 参考画像 -->
+          <div class="spec-section" id="s-images-section" style="display:none;">
+          <div class="spec-section-title">参考画像・素材</div>
+          
+            <div id="s-refurl-wrap" style="margin-bottom: 12px; display: none;">
+            <div style="font-size: 0.68rem; color: #9090b0; margin-bottom: 4px;">参考URL：</div>
+            <div class="spec-field-value" id="s-refurl-v" style="display: flex; flex-direction: column; gap: 4px;">
+              </div>
+          </div>
+
+          <div class="spec-images" id="s-images"></div>
+        </div>
+
+      <!-- 納品物チェックリスト -->
+      <div class="spec-section" id="s-deliver-section" style="display:none;">
+        <div class="spec-section-title">納品物チェックリスト</div>
+        <ul class="spec-checklist" id="s-checklist"></ul>
+      </div>
+
+      <!-- 備考 -->
+      <div class="spec-section" id="s-notes-section" style="display:none;">
+        <div class="spec-section-title">備考・連絡事項</div>
+        <div class="spec-notes" id="s-notes"></div>
+      </div>
+
+    </div><!-- /spec-body -->
+
+    <div class="spec-footer">
+      <span id="s-footer-type">作業指示書</span>
+      <span id="s-footer-date"></span>
+    </div>
+  </div><!-- /spec-doc -->
+</div><!-- /preview-panel -->
+</main>
+
+<script>
+// ──────────────────────────────────────────
+// State
+// ──────────────────────────────────────────
+let selectedType = '';
+const uploadedImages = [];
+let colorCount = 3;
+
+const typeLabels = {
+  illust: '🎨 イラスト制作',
+  '3dcg':  '🧊 3DCG制作',
+  video:  '🎬 動画制作',
+  image:  '🖼 画像加工'
+};
+
+// Init date
+document.getElementById('s-created').textContent = new Date().toLocaleDateString('ja-JP');
+document.getElementById('s-footer-date').textContent = `作成日：${new Date().toLocaleDateString('ja-JP')}`;
+
+// ──────────────────────────────────────────
+// Type selection
+// ──────────────────────────────────────────
+function selectType(type, el) {
+  selectedType = type;
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.dynamic-section').forEach(s => s.classList.remove('visible'));
+  const sec = document.getElementById('dyn-' + type);
+  if (sec) sec.classList.add('visible');
+  update();
+}
+
+// ──────────────────────────────────────────
+// Color swatches
+// ──────────────────────────────────────────
+function updateSwatch(idx, color) {
+  const preview = document.getElementById('csw-' + idx);
+  if (preview) preview.style.background = color;
+}
+
+function addColor() {
+  const idx = colorCount++;
+  const row = document.getElementById('colorRow');
+  const addBtn = row.querySelector('.add-color-btn');
+  const randomHex = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+  const swatch = document.createElement('div');
+  swatch.className = 'color-swatch';
+  swatch.id = 'cs-' + idx;
+  swatch.innerHTML = `
+    <input type="color" value="${randomHex}" oninput="updateSwatch(${idx}, this.value); update()">
+    <div class="color-swatch-preview" id="csw-${idx}" style="background:${randomHex};"></div>
+  `;
+  row.insertBefore(swatch, addBtn);
+  update();
+}
+
+// ──────────────────────────────────────────
+// Image upload
+// ──────────────────────────────────────────
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('dragover');
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  loadImages(files);
+}
+function handleFiles(e) {
+  loadImages(Array.from(e.target.files));
+}
+function loadImages(files) {
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      uploadedImages.push({ src: e.target.result, name: file.name });
+      renderPreviews();
+      update();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderPreviews() {
+  document.getElementById('imagePreviews').innerHTML = uploadedImages.map((img, i) => `
+    <div class="preview-item">
+      <img src="${img.src}" alt="${img.name}">
+      <button class="remove-img" onclick="removeImage(${i})">✕</button>
+    </div>
+  `).join('');
+}
+function removeImage(i) {
+  uploadedImages.splice(i, 1);
+  renderPreviews();
+  update();
+}
+
+// ──────────────────────────────────────────
+// Helpers
+// ──────────────────────────────────────────
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text || '—';
+}
+function show(id, visible) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = visible ? '' : 'none';
+}
+function fmtDate(d) {
+  if (!d) return '';
+  const [y, m, day] = d.split('-');
+  return `${y}年${parseInt(m)}月${parseInt(day)}日`;
+}
+
+// Build bullet list text from object
+function buildBulletText(pairs) {
+  return pairs
+    .filter(([, v]) => v)
+    .map(([label, v]) => `・${label}：${v}`)
+    .join('\n') || '（未入力）';
+}
+
+// ──────────────────────────────────────────
+// Main update
+// ──────────────────────────────────────────
+function update() {
+  const title    = val('f-title');
+  const purpose  = val('f-purpose');
+  const deadline = val('f-deadline');
+  const priority = document.getElementById('f-priority').value;
+  const refurl   = val('f-refurl');
+  const width    = val('f-width');
+  const height   = val('f-height');
+  const res      = val('f-resolution');
+  const format   = val('f-format');
+  const ng       = val('f-ng');
+  const colornote= val('f-colornote');
+  const deliverables = val('f-deliverables');
+  const notes    = val('f-notes');
+
+  // Header
+  document.getElementById('s-title').textContent = title || '案件名を入力してください';
+  document.getElementById('s-type').textContent = selectedType ? typeLabels[selectedType] : 'CREATIVE SPECIFICATION';
+  document.getElementById('s-footer-type').textContent = selectedType ? typeLabels[selectedType] + ' 指示書' : '作業指示書';
+
+  // Meta row
+  if (deadline) {
+    document.getElementById('s-deadline').textContent = fmtDate(deadline);
+    show('s-meta-deadline', true);
+  } else { show('s-meta-deadline', false); }
+
+  // Basic info grid
+  setText('s-purpose-v', purpose);
+  setText('s-deadline-v', deadline ? fmtDate(deadline) : null);
+
+  if (priority) {
+    const map = { high: ['badge-high','高'], medium: ['badge-medium','中'], low: ['badge-low','低'] };
+    const [cls, lbl] = map[priority];
+    document.getElementById('s-priority-v').innerHTML = `<span class="spec-badge ${cls}">${lbl}</span>`;
+  } else {
+    document.getElementById('s-priority-v').textContent = '—';
+  }
+  
+  // Tech spec
+  setText('s-size-v', (width && height) ? `${width} × ${height} px` : null);
+  setText('s-res-v', res);
+  setText('s-format-v', format);
+
+  // ── Dynamic preview sections ──
+  ['illust','3dcg','video','image'].forEach(t => show('sp-' + t, false));
+
+  if (selectedType === 'illust') {
+    show('sp-illust', true);
+    // Character
+    const charText = buildBulletText([
+      ['年齢・性別', val('i-age')],
+      ['服装・外見', val('i-outfit')],
+      ['表情', val('i-expression')],
+      ['ポーズ・動き', val('i-pose')]
+    ]);
+    document.getElementById('sp-i-char').textContent = charText;
+    // World
+    const worldText = buildBulletText([
+      ['世界観・ジャンル', val('i-world')],
+      ['雰囲気・トーン', val('i-tone')],
+      ['参考スタイル', val('i-ref')]
+    ]);
+    document.getElementById('sp-i-world').textContent = worldText;
+    // Composition
+    const compText = buildBulletText([
+      ['画角・切り取り', val('i-framing')],
+      ['アングル・視点', val('i-angle')],
+      ['背景', val('i-bg')]
+    ]);
+    document.getElementById('sp-i-comp').textContent = compText;
+    // Lighting
+    const lightText = buildBulletText([
+      ['ライティング', val('i-light')],
+      ['色彩・カラーイメージ', val('i-color')]
+    ]);
+    document.getElementById('sp-i-light').textContent = lightText;
+  }
+
+  if (selectedType === '3dcg') {
+    show('sp-3dcg', true);
+    const envText = buildBulletText([
+      ['使用プラットフォーム', val('c-platform')],
+      ['ソフトウェア', val('c-software')],
+      ['レンダラー', val('c-renderer')]
+    ]);
+    document.getElementById('sp-c-env').textContent = envText;
+    const specText = buildBulletText([
+      ['ポリゴン数', val('c-poly')],
+      ['テクスチャ', val('c-texture')],
+      ['ファイル形式', val('c-fileformat')]
+    ]);
+    document.getElementById('sp-c-spec').textContent = specText;
+    const matText = buildBulletText([
+      ['シェーダー', val('c-shader')],
+      ['マテリアル', val('c-material')]
+    ]);
+    document.getElementById('sp-c-mat').textContent = matText;
+    const rigText = buildBulletText([
+      ['ボーン・リグ', val('c-rig')],
+      ['ブレンドシェイプ', val('c-morph')],
+      ['トポロジー', val('c-topo')]
+    ]);
+    document.getElementById('sp-c-rig').textContent = rigText;
+  }
+
+  if (selectedType === 'video') {
+    show('sp-video', true);
+    const tempoText = buildBulletText([
+      ['全体の長さ', val('v-duration')],
+      ['テンポ感', val('v-tempo')],
+      ['フレームレート', val('v-fps')]
+    ]);
+    document.getElementById('sp-v-tempo').textContent = tempoText;
+    document.getElementById('sp-v-timeline').textContent = val('v-timeline') || '（未入力）';
+    const effectText = buildBulletText([
+      ['トランジション', val('v-transition')],
+      ['テロップ', val('v-caption')],
+      ['エフェクト', val('v-effect')]
+    ]);
+    document.getElementById('sp-v-effect').textContent = effectText;
+    const audioText = buildBulletText([
+      ['BGM', val('v-bgm')],
+      ['SE（効果音）', val('v-se')],
+      ['ナレーション', val('v-voice')]
+    ]);
+    document.getElementById('sp-v-audio').textContent = audioText;
+  }
+
+  if (selectedType === 'image') {
+    show('sp-image', true);
+    const sourceText = buildBulletText([
+      ['元画像の問題点', val('m-source')],
+      ['ファイル形式・解像度', val('m-srcformat')]
+    ]);
+    // m-source is textarea, re-read
+    const mSource = val('m-source');
+    const mSrcFmt = val('m-srcformat');
+    let srcLines = [];
+    if (mSource) mSource.split('\n').forEach(l => { if (l.trim()) srcLines.push(l.trim()); });
+    if (mSrcFmt) srcLines.push(`・ファイル形式：${mSrcFmt}`);
+    document.getElementById('sp-m-source').textContent = srcLines.join('\n') || '（未入力）';
+
+    const goalText = buildBulletText([
+      ['加工の目的', val('m-goal')],
+      ['加工の種類', val('m-type')]
+    ]);
+    document.getElementById('sp-m-goal').textContent = goalText;
+
+    const mProcess = val('m-process');
+    const mFinish = val('m-finish');
+    let procLines = [];
+    if (mProcess) mProcess.split('\n').forEach(l => { if (l.trim()) procLines.push(l.trim()); });
+    if (mFinish) procLines.push(`・仕上がりイメージ：${mFinish}`);
+    document.getElementById('sp-m-process').textContent = procLines.join('\n') || '（未入力）';
+  }
+
+  // ── NG Section ──
+  const ngContainer = document.getElementById('s-ng-items');
+  if (ng) {
+    const lines = ng.split('\n').filter(l => l.trim());
+    if (lines.length > 0) {
+      ngContainer.innerHTML = lines.map(line =>
+        `<div class="spec-ng-item">${escapeHtml(line.replace(/^[・\-\*\s]+/, ''))}</div>`
+      ).join('');
+    } else {
+      ngContainer.innerHTML = '<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>';
+    }
+  } else {
+    ngContainer.innerHTML = '<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>';
+  }
+
+// ── image URL ──
+  const imgSection = document.getElementById('s-images-section');
+  const urlWrap    = document.getElementById('s-refurl-wrap');
+  const urlLink    = document.getElementById('s-refurl-v');
+  const sImages    = document.getElementById('s-images');
+
+  if (uploadedImages.length > 0 || refurl) {
+    show('s-images-section', true);
+
+    // URLの表示制御
+    if (refurl) {
+      urlWrap.style.display = '';
+      const urls = refurl.split('\n').filter(l => l.trim());
+      urlLink.innerHTML = urls.map(url =>
+        `<a href="${escapeHtml(url.trim())}" target="_blank" style="color: #6c5ce7; text-decoration: underline; word-break: break-all;">${escapeHtml(url.trim())}</a>`
+      ).join('');
+    } else {
+      urlWrap.style.display = 'none';
+      urlLink.innerHTML = '';
+    }
+
+    // 画像の表示制御
+    if (uploadedImages.length > 0) {
+      sImages.style.display = 'grid';
+      sImages.innerHTML = uploadedImages.map(img =>
+        `<div class="spec-image-wrap">
+          <div class="spec-image-item"><img src="${img.src}" alt="${img.name}"></div>
+          <div class="spec-image-caption">${img.name}</div>
+        </div>`
+      ).join('');
+    } else {
+      sImages.style.display = 'none';
+    }
+  } else {
+    show('s-images-section', false);
+  }
+
+  // ── Deliverables ──
+  if (deliverables) {
+    show('s-deliver-section', true);
+    const items = deliverables.split('\n').filter(l => l.trim());
+    document.getElementById('s-checklist').innerHTML = items.map(item =>
+      `<li>${escapeHtml(item.replace(/^[・\-\*\s]+/, ''))}</li>`
+    ).join('');
+  } else { show('s-deliver-section', false); }
+
+  // ── Notes ──
+  if (notes) {
+    show('s-notes-section', true);
+    document.getElementById('s-notes').textContent = notes;
+  } else { show('s-notes-section', false); }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ──────────────────────────────────────────
+// Clear
+// ──────────────────────────────────────────
+function clearForm() {
+  if (!confirm('フォームの内容をすべてクリアしますか？')) return;
+  document.querySelectorAll('input[type=text], input[type=date], input[type=number], textarea').forEach(el => el.value = '');
+  document.getElementById('f-priority').value = '';
+  selectedType = '';
+  uploadedImages.length = 0;
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.dynamic-section').forEach(s => s.classList.remove('visible'));
+  renderPreviews();
+  update();
+}
+
+// Initial render
+update();
+
+function downloadPDF() {
+  const element = document.getElementById('specDoc');
+  const opt = {
+    margin:       0.2, // PDFの余白
+    filename:     (val('f-title') || '作業指示書') + '.pdf', // 案件名がファイル名になります
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(opt).from(element).save();
+}
+</script>
+</body>
+</html>
