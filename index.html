@@ -223,13 +223,20 @@ select option{background:var(--surface2)}
         <label>案件名 / プロジェクト名 <span class="req">必須</span></label>
         <input type="text" id="f-title" placeholder="例：新商品ティザー動画制作、キャラクターイラスト依頼" oninput="update()">
       </div>
-      <div class="field-row">
+<div class="field-row">
         <div class="field">
-          <label>利用者名（担当）</label>
+          <label>利用者名</label>
+          <select class="input" id="p-worker-preset" onchange="applyPreset('p-worker-preset', 'f-worker')" style="margin-bottom: 5px; width: 100%;">
+            <option value="">-- 利用者を選択 --</option>
+          </select>
           <input type="text" id="f-worker" placeholder="担当される方のお名前" oninput="update()">
         </div>
+        
         <div class="field">
           <label>指示者名</label>
+          <select class="input" id="p-instructor-preset" onchange="applyPreset('p-instructor-preset', 'f-instructor')" style="margin-bottom: 5px; width: 100%;">
+            <option value="">-- 指示者を選択 --</option>
+          </select>
           <input type="text" id="f-instructor" placeholder="指示を出すスタッフ名" oninput="update()">
         </div>
       </div>
@@ -1110,6 +1117,9 @@ function update() {
   const deliverables= val('f-deliverables');
   const notes       = val('f-notes');
   const refurl      = val('f-refurl');
+  const worker     = val('f-worker');
+  const instructor = val('f-instructor');
+  const worktime   = val('f-worktime');
 
   // Header
   document.getElementById('s-title').textContent = title || '案件名を入力してください';
@@ -1267,9 +1277,6 @@ function update() {
   }
 
   // Footer: worker / instructor / worktime
-  const worker     = val('f-worker');
-  const instructor = val('f-instructor');
-  const worktime   = val('f-worktime');
   if(worker){ show('s-footer-worker',true); document.getElementById('s-footer-worker-v').textContent=worker; } else { show('s-footer-worker',false); }
   if(instructor){ show('s-footer-instructor',true); document.getElementById('s-footer-instructor-v').textContent=instructor; } else { show('s-footer-instructor',false); }
   if(worktime){ show('s-footer-worktime',true); document.getElementById('s-footer-worktime-v').textContent=worktime; } else { show('s-footer-worktime',false); }
@@ -1334,6 +1341,77 @@ function downloadPDF() {
 
 // Initial render
 update();
+
+// 【利用者リスト】
+const WORKERS = [
+  "岸",
+  "金谷",
+  "木内",
+  "増野",
+  "吉田",
+  "宮本",
+  "山尾",
+  "夫津木",
+  "玉岡",
+  "鶴田",
+  "樽谷",
+  "柏木",
+  "嶋田",
+  "村上",
+  "北村",
+  "四方",
+  "鳴瀬",
+  "柴田",
+  "生頼",
+  "寺岡",
+  "富阪",
+  "瀬川",
+  "高橋",
+  "小野",
+  "荒井",
+  "中山",
+  "日高",
+  "足立",
+  "吉永",
+  "稲月",
+  "佐賀",
+  "田中",
+  "小椋",
+];
+
+// 【指示者リスト】
+const INSTRUCTORS = [
+  "土生田",
+  "原田",
+  "森下",
+  "鈴木",
+  "角田",
+];
+
+window.addEventListener('DOMContentLoaded', () => {
+  const wSelect = document.getElementById('p-worker-preset');
+  const iSelect = document.getElementById('p-instructor-preset');
+
+  // 利用者プルダウンの生成
+  WORKERS.forEach(name => {
+    wSelect.add(new Option(name, name));
+  });
+
+  // 指示者プルダウンの生成
+  INSTRUCTORS.forEach(name => {
+    iSelect.add(new Option(name, name));
+  });
+});
+
+// 反映用関数（これは共通で使えます）
+function applyPreset(selectId, inputId) {
+  const select = document.getElementById(selectId);
+  const input = document.getElementById(inputId);
+  if (select.value) {
+    input.value = select.value;
+    update();
+  }
+}
 </script>
 </body>
 </html>
