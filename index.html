@@ -193,27 +193,6 @@ select option{background:var(--surface2)}
   .spec-doc{box-shadow:none;border-radius:0;max-width:100%;width:100%}
   .spec-header,.spec-section-title,.spec-field,.spec-badge,.spec-color-swatch,.spec-ng-header,.spec-ng-section,.spec-detail-block-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
-
-  /* セクションの途中で改ページされるのを防ぐ */
-.spec-section, .spec-field, .spec-detail-block, .spec-ng-section {
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-/* プレビューエリアの余白を調整して1枚に収まりやすくする */
-@media print {
-  .spec-doc {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .spec-body {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-  .spec-section {
-    margin-bottom: 1.2rem !important;
-  }
-}
 </style>
 </head>
 <body>
@@ -1349,34 +1328,26 @@ function clearForm() {
 
 // ── PDF ──
 function downloadPDF() {
-  // IDを 'specDoc' から 'pdf-target' に修正
-  const element = document.getElementById('pdf-target');
+  const element = document.getElementById('specDoc');
   
-  if (!element) {
-    alert("出力対象が見つかりません。");
-    return;
-  }
-
-  const workerName = document.getElementById('f-worker').value || "担当者不明";
+  // ファイル名の生成
+  const workerName = val('f-worker') || '未設定'; // 作業者名を取得（空なら'未設定'）
   
   const now = new Date();
-  const yy = String(now.getFullYear()).slice(-2);
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
+  const yy = String(now.getFullYear()).slice(-2); // 2026 -> 26
+  const mm = String(now.getMonth() + 1).padStart(2, '0'); // 4 -> 04
+  const dd = String(now.getDate()).padStart(2, '0'); // 10 -> 10
   const dateStr = yy + mm + dd;
   
   const fileName = `指示書_${workerName}_${dateStr}.pdf`;
 
   const opt = {
-    margin: [0.3, 0.3], // 上下の余白
+    margin: 0.2,
     filename: fileName,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-    // 不自然な切れ目を防ぐ設定を追加
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    image: { type:'jpeg', quality:0.98 },
+    html2canvas: { scale:2, useCORS:true },
+    jsPDF: { unit:'in', format:'a4', orientation:'portrait' }
   };
-
   html2pdf().set(opt).from(element).save();
 }
 
