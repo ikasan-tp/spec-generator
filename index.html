@@ -110,7 +110,10 @@ select option{background:var(--surface2)}
 .preview-label-top{font-size:.68rem;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:1rem;align-self:flex-start}
 
 /* ===== SPEC DOCUMENT ===== */
-.spec-doc{background:#fff;color:#1a1a2a;width:100%;max-width:720px;border-radius:var(--radius-xl);overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 24px 64px rgba(0,0,0,.5);font-family:'Noto Sans JP',sans-serif}
+.spec-doc{background:#fff;color:#1a1a2a;width:100%;max-width:720px;border-radius:var(--radius-xl);overflow:visible;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 24px 64px rgba(0,0,0,.5);font-family:'Noto Sans JP',sans-serif}
+/* spec-headerは独自でroundさせる */
+.spec-header{border-radius:var(--radius-xl) var(--radius-xl) 0 0;overflow:hidden}
+.spec-footer{border-radius:0 0 var(--radius-xl) var(--radius-xl);overflow:hidden}
 
 /* Spec Header */
 .spec-header{background:#0f0f1e;padding:2.5rem 2.5rem 2rem;color:#fff;position:relative;overflow:hidden}
@@ -125,7 +128,7 @@ select option{background:var(--surface2)}
 
 /* Spec Body */
 .spec-body{padding:2rem 2.5rem 2.5rem}
-.spec-section{margin-bottom:2rem}
+.spec-section{margin-bottom:2rem;page-break-inside:avoid;break-inside:avoid}
 .spec-section-title{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:#6c5ce7;font-weight:500;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1.5px solid #eeeef8;display:flex;align-items:center;gap:8px}
 
 /* Info grid */
@@ -142,12 +145,12 @@ select option{background:var(--surface2)}
 .badge-low{background:#dcfce7;color:#16a34a}
 
 /* Dynamic spec blocks */
-.spec-detail-block{background:#f7f7fb;border:1px solid #ededf5;border-radius:10px;overflow:hidden;margin-bottom:8px}
+.spec-detail-block{background:#f7f7fb;border:1px solid #ededf5;border-radius:10px;overflow:hidden;margin-bottom:8px;page-break-inside:avoid;break-inside:avoid}
 .spec-detail-block-header{padding:7px 12px;background:#f0f0f8;border-bottom:1px solid #ededf5;font-size:.7rem;font-weight:700;color:#6c5ce7;letter-spacing:.06em}
 .spec-detail-value{padding:8px 12px;font-size:.87rem;color:#2a2a3e;line-height:1.6;white-space:pre-wrap}
 
 /* NG */
-.spec-ng-section{background:#fff5f5;border:2px solid #f5c6c6;border-radius:10px;overflow:hidden}
+.spec-ng-section{background:#fff5f5;border:2px solid #f5c6c6;border-radius:10px;overflow:hidden;page-break-inside:avoid;break-inside:avoid}
 .spec-ng-header{background:#e74c3c;padding:10px 14px;display:flex;align-items:center;gap:8px}
 .spec-ng-header-text{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase}
 .spec-ng-body{padding:14px 16px}
@@ -190,8 +193,19 @@ select option{background:var(--surface2)}
   header,.form-panel,.preview-label-top{display:none!important}
   main{display:block;height:auto;overflow:visible}
   .preview-panel{padding:0;background:#fff;overflow:visible}
-  .spec-doc{box-shadow:none;border-radius:0;max-width:100%;width:100%}
-  .spec-header,.spec-section-title,.spec-field,.spec-badge,.spec-color-swatch,.spec-ng-header,.spec-ng-section,.spec-detail-block-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .spec-doc{box-shadow:none;border-radius:0;max-width:100%;width:100%;overflow:visible}
+  .spec-header{border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .spec-footer{border-radius:0}
+  .spec-section-title,.spec-field,.spec-badge,.spec-color-swatch,.spec-ng-header,.spec-ng-section,.spec-detail-block-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* ページ途中で切れないように */
+  .spec-section{page-break-inside:avoid;break-inside:avoid}
+  .spec-detail-block{page-break-inside:avoid;break-inside:avoid}
+  .spec-ng-section{page-break-inside:avoid;break-inside:avoid}
+  .spec-grid{page-break-inside:avoid;break-inside:avoid}
+  .spec-checklist li{page-break-inside:avoid;break-inside:avoid}
+  .spec-field{page-break-inside:avoid;break-inside:avoid}
+  .spec-color-chip{page-break-inside:avoid;break-inside:avoid}
+  .spec-image-wrap{page-break-inside:avoid;break-inside:avoid}
 }
 </style>
 </head>
@@ -1314,6 +1328,8 @@ function clearForm() {
   document.querySelectorAll('input[type=text],input[type=date],input[type=number],textarea').forEach(el=>el.value='');
   document.getElementById('f-priority').value='';
   document.getElementById('d-kind').value='';
+  document.getElementById('p-worker-preset').value='';
+  document.getElementById('p-instructor-preset').value='';
   selectedType='';
   uploadedImages.length=0;
   hiddenBlocks.clear();
@@ -1342,11 +1358,12 @@ function downloadPDF() {
   const fileName = `指示書_${workerName}_${dateStr}.pdf`;
 
   const opt = {
-    margin: 0.2,
+    margin: [0.3, 0.2, 0.3, 0.2],
     filename: fileName,
     image: { type:'jpeg', quality:0.98 },
-    html2canvas: { scale:2, useCORS:true },
-    jsPDF: { unit:'in', format:'a4', orientation:'portrait' }
+    html2canvas: { scale:2, useCORS:true, logging:false },
+    jsPDF: { unit:'in', format:'a4', orientation:'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
   html2pdf().set(opt).from(element).save();
 }
