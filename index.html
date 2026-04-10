@@ -1329,9 +1329,21 @@ function clearForm() {
 // ── PDF ──
 function downloadPDF() {
   const element = document.getElementById('specDoc');
+  
+  // ファイル名の生成
+  const workerName = val('f-worker') || '未設定'; // 作業者名を取得（空なら'未設定'）
+  
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(-2); // 2026 -> 26
+  const mm = String(now.getMonth() + 1).padStart(2, '0'); // 4 -> 04
+  const dd = String(now.getDate()).padStart(2, '0'); // 10 -> 10
+  const dateStr = yy + mm + dd;
+  
+  const fileName = `指示書_${workerName}_${dateStr}.pdf`;
+
   const opt = {
     margin: 0.2,
-    filename: (val('f-title')||'作業指示書') + '.pdf',
+    filename: fileName,
     image: { type:'jpeg', quality:0.98 },
     html2canvas: { scale:2, useCORS:true },
     jsPDF: { unit:'in', format:'a4', orientation:'portrait' }
