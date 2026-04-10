@@ -693,35 +693,6 @@ select option{background:var(--surface2)}
     </div>
   </div>
 
-  <!-- カラーパレット（共通） -->
-  <div class="form-block">
-    <div class="form-block-header">
-      <span>🎨</span>
-      <span class="form-block-title">カラーパレット</span>
-    </div>
-    <div class="form-block-body">
-      <div class="color-row" id="colorRow">
-        <div class="color-swatch" id="cs-0">
-          <input type="color" value="#6c5ce7" oninput="updateSwatch(0,this.value);update()">
-          <div class="color-swatch-preview" id="csw-0" style="background:#6c5ce7"></div>
-        </div>
-        <div class="color-swatch" id="cs-1">
-          <input type="color" value="#a29bfe" oninput="updateSwatch(1,this.value);update()">
-          <div class="color-swatch-preview" id="csw-1" style="background:#a29bfe"></div>
-        </div>
-        <div class="color-swatch" id="cs-2">
-          <input type="color" value="#0f0f1e" oninput="updateSwatch(2,this.value);update()">
-          <div class="color-swatch-preview" id="csw-2" style="background:#0f0f1e"></div>
-        </div>
-        <button class="add-color-btn" onclick="addColor()">＋</button>
-      </div>
-      <div class="field">
-        <label>カラーメモ</label>
-        <input type="text" id="f-colornote" placeholder="例：ブランドカラーを基調に、清潔感のある配色で" oninput="update()">
-      </div>
-    </div>
-  </div>
-
   <!-- 参考画像・URL（共通） -->
   <div class="form-block">
     <div class="form-block-header">
@@ -973,13 +944,6 @@ select option{background:var(--surface2)}
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- カラーパレット -->
-      <div class="spec-section">
-        <div class="spec-section-title">カラーパレット</div>
-        <div class="spec-palette" id="s-palette"></div>
-        <div style="margin-top:10px;font-size:.83rem;color:#8888a8" id="s-colornote"></div>
       </div>
 
       <!-- 参考画像 -->
