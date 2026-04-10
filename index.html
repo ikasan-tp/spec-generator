@@ -464,14 +464,7 @@ select option{background:var(--surface2)}
           <div class="field"><label>使用ソフトウェア</label><input type="text" id="c-software" placeholder="例：Blender、Maya、C4D" oninput="update()"></div>
           <div class="field"><label>レンダラー</label><input type="text" id="c-renderer" placeholder="例：Cycles、EEVEE、Arnold" oninput="update()"></div>
         </div>
-        <div class="field-row">
-          <div class="field"><label>出力幅 (px)</label><input type="number" id="c-width" placeholder="例：1920" oninput="update()"></div>
-          <div class="field"><label>出力高さ (px)</label><input type="number" id="c-height" placeholder="例：1080" oninput="update()"></div>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>出力フォーマット</label><input type="text" id="c-format" placeholder="例：PNG / EXR / MP4" oninput="update()"></div>
-          <div class="field"><label>ファイル書き出し形式</label><input type="text" id="c-fileformat" placeholder="例：FBX、OBJ、.blend" oninput="update()"></div>
-        </div>
+        <div class="field"><label>書き出しファイル形式</label><input type="text" id="c-fileformat" placeholder="例：FBX、OBJ、.blend、Unityパッケージ" oninput="update()"></div>
       </div>
     </div>
     <!-- 仕様制限 -->
@@ -693,6 +686,36 @@ select option{background:var(--surface2)}
     </div>
   </div>
 
+  <!-- カラーパレット（共通） -->
+  <div class="form-block">
+    <div class="form-block-header">
+      <span>🎨</span>
+      <span class="form-block-title">カラーパレット</span>
+      <label class="block-toggle" style="margin-left:auto"><input type="checkbox" id="cb-palette" checked onchange="toggleBlock('palette',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
+    </div>
+    <div class="form-block-body">
+      <div class="color-row" id="colorRow">
+        <div class="color-swatch" id="cs-0">
+          <input type="color" value="#6c5ce7" oninput="updateSwatch(0,this.value);update()">
+          <div class="color-swatch-preview" id="csw-0" style="background:#6c5ce7"></div>
+        </div>
+        <div class="color-swatch" id="cs-1">
+          <input type="color" value="#a29bfe" oninput="updateSwatch(1,this.value);update()">
+          <div class="color-swatch-preview" id="csw-1" style="background:#a29bfe"></div>
+        </div>
+        <div class="color-swatch" id="cs-2">
+          <input type="color" value="#0f0f1e" oninput="updateSwatch(2,this.value);update()">
+          <div class="color-swatch-preview" id="csw-2" style="background:#0f0f1e"></div>
+        </div>
+        <button class="add-color-btn" onclick="addColor()">＋</button>
+      </div>
+      <div class="field">
+        <label>カラーメモ</label>
+        <input type="text" id="f-colornote" placeholder="例：ブランドカラーを基調に、清潔感のある配色で" oninput="update()">
+      </div>
+    </div>
+  </div>
+
   <!-- 参考画像・URL（共通） -->
   <div class="form-block">
     <div class="form-block-header">
@@ -773,26 +796,12 @@ select option{background:var(--surface2)}
             <div class="spec-field-value" id="s-purpose-v">—</div>
           </div>
           <div class="spec-field">
-            <div class="spec-field-label">利用者名（担当）</div>
-            <div class="spec-field-value" id="s-worker-grid">—</div>
-          </div>
-          <div class="spec-field">
-            <div class="spec-field-label">指示者</div>
-            <div class="spec-field-value" id="s-instructor-v">—</div>
-          </div>
-          <div class="spec-field">
             <div class="spec-field-label">納期</div>
             <div class="spec-field-value" id="s-deadline-v">—</div>
           </div>
           <div class="spec-field">
-            <div class="spec-field-label">想定作業時間</div>
-            <div class="spec-field-value" id="s-worktime-v">—</div>
-          </div>
-          <div class="spec-field">
             <div class="spec-field-label">優先度</div>
             <div class="spec-field-value" id="s-priority-v">—</div>
-          </div>
-          <div class="spec-field full" id="s-worktime-row" style="display:none">
           </div>
         </div>
       </div>
@@ -946,6 +955,13 @@ select option{background:var(--surface2)}
         </div>
       </div>
 
+      <!-- カラーパレット -->
+      <div class="spec-section" id="s-palette-section">
+        <div class="spec-section-title">カラーパレット</div>
+        <div class="spec-palette" id="s-palette"></div>
+        <div style="margin-top:10px;font-size:.83rem;color:#8888a8" id="s-colornote"></div>
+      </div>
+
       <!-- 参考画像 -->
       <div class="spec-section" id="s-images-section" style="display:none">
         <div class="spec-section-title">参考画像・素材</div>
@@ -972,7 +988,12 @@ select option{background:var(--surface2)}
 
     <div class="spec-footer">
       <span id="s-footer-type">作業指示書</span>
-      <span>作成日：<span id="s-footer-date"></span></span>
+      <span style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap">
+        <span id="s-footer-worker" style="display:none">担当：<strong id="s-footer-worker-v"></strong></span>
+        <span id="s-footer-instructor" style="display:none">指示者：<strong id="s-footer-instructor-v"></strong></span>
+        <span id="s-footer-worktime" style="display:none">作業時間目安：<strong id="s-footer-worktime-v"></strong></span>
+        <span>作成日：<span id="s-footer-date"></span></span>
+      </span>
     </div>
   </div><!-- /spec-doc -->
 </div><!-- /preview-panel -->
@@ -1081,11 +1102,8 @@ function showSpecBlock(previewId, formBlockId, content) {
 // ── Main update ──
 function update() {
   const title       = val('f-title');
-  const worker      = val('f-worker');
-  const instructor  = val('f-instructor');
   const purpose     = val('f-purpose');
   const deadline    = val('f-deadline');
-  const worktime    = val('f-worktime');
   const priority    = document.getElementById('f-priority').value;
   const ng          = val('f-ng');
   const colornote   = val('f-colornote');
@@ -1104,10 +1122,7 @@ function update() {
 
   // Basic grid
   setText('s-purpose-v', purpose);
-  setText('s-worker-grid', worker);
-  setText('s-instructor-v', instructor);
   setText('s-deadline-v', deadline?fmtDate(deadline):null);
-  setText('s-worktime-v', worktime);
   if(priority){
     const map={high:['badge-high','高（URGENT）'],medium:['badge-medium','中'],low:['badge-low','低']};
     const[cls,lbl]=map[priority];
@@ -1164,7 +1179,7 @@ function update() {
 
   if(selectedType==='3dcg'){
     show('sp-3dcg',true);
-    const envTxt=bullets([['プラットフォーム',val('c-platform')],['ソフトウェア',val('c-software')],['レンダラー',val('c-renderer')],['出力サイズ',(val('c-width')&&val('c-height'))?`${val('c-width')} × ${val('c-height')} px`:''],['出力形式',val('c-format')],['書き出し形式',val('c-fileformat')]]);
+    const envTxt=bullets([['プラットフォーム',val('c-platform')],['ソフトウェア',val('c-software')],['レンダラー',val('c-renderer')],['書き出し形式',val('c-fileformat')]]);
     if(blockVisible('3dcg-env')&&envTxt!=='（未入力）'){ show('sp-3dcg-env',true); document.getElementById('sp-c-env').textContent=envTxt; } else { show('sp-3dcg-env',false); }
 
     const specTxt=bullets([['ポリゴン数',val('c-poly')],['テクスチャ',val('c-texture')]]);
@@ -1236,14 +1251,30 @@ function update() {
   } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
 
   // Color palette
-  const swatches = document.querySelectorAll('#colorRow .color-swatch');
-  document.getElementById('s-palette').innerHTML = Array.from(swatches).map(sw=>{
-    const inp=sw.querySelector('input[type=color]');
-    const prv=sw.querySelector('.color-swatch-preview');
-    const color=inp?inp.value:(prv?prv.style.background:'#ccc');
-    return `<div class="spec-color-chip"><div class="spec-color-swatch" style="background:${color}"></div><div class="spec-color-hex">${color.toUpperCase()}</div></div>`;
-  }).join('');
-  document.getElementById('s-colornote').textContent = colornote;
+  const paletteSection = document.getElementById('s-palette-section');
+  if(blockVisible('palette')){
+    paletteSection.style.display='';
+    const swatches = document.querySelectorAll('#colorRow .color-swatch');
+    document.getElementById('s-palette').innerHTML = Array.from(swatches).map(sw=>{
+      const inp=sw.querySelector('input[type=color]');
+      const prv=sw.querySelector('.color-swatch-preview');
+      const color=inp?inp.value:(prv?prv.style.background:'#ccc');
+      return `<div class="spec-color-chip"><div class="spec-color-swatch" style="background:${color}"></div><div class="spec-color-hex">${color.toUpperCase()}</div></div>`;
+    }).join('');
+    document.getElementById('s-colornote').textContent = colornote;
+  } else {
+    paletteSection.style.display='none';
+  }
+
+  // Footer: worker / instructor / worktime
+  const worker     = val('f-worker');
+  const instructor = val('f-instructor');
+  const worktime   = val('f-worktime');
+  if(worker){ show('s-footer-worker',true); document.getElementById('s-footer-worker-v').textContent=worker; } else { show('s-footer-worker',false); }
+  if(instructor){ show('s-footer-instructor',true); document.getElementById('s-footer-instructor-v').textContent=instructor; } else { show('s-footer-instructor',false); }
+  if(worktime){ show('s-footer-worktime',true); document.getElementById('s-footer-worktime-v').textContent=worktime; } else { show('s-footer-worktime',false); }
+  // meta-row worker
+  if(worker){ show('s-meta-worker',true); document.getElementById('s-worker-v').textContent=worker; } else { show('s-meta-worker',false); }
 
   // Images & URL
   if(uploadedImages.length>0||refurl){
@@ -1283,6 +1314,7 @@ function clearForm() {
   document.querySelectorAll('.dynamic-section').forEach(s=>s.classList.remove('visible'));
   document.querySelectorAll('.dynamic-block').forEach(b=>b.classList.remove('excluded'));
   document.querySelectorAll('.block-toggle input[type=checkbox]').forEach(cb=>cb.checked=true);
+  document.getElementById('cb-palette').checked=true;
   renderPreviews();
   update();
 }
