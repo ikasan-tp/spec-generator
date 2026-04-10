@@ -1349,7 +1349,14 @@ function clearForm() {
 
 // ── PDF ──
 function downloadPDF() {
+  // IDを 'specDoc' から 'pdf-target' に修正
   const element = document.getElementById('pdf-target');
+  
+  if (!element) {
+    alert("出力対象が見つかりません。");
+    return;
+  }
+
   const workerName = document.getElementById('f-worker').value || "担当者不明";
   
   const now = new Date();
@@ -1361,12 +1368,12 @@ function downloadPDF() {
   const fileName = `指示書_${workerName}_${dateStr}.pdf`;
 
   const opt = {
-    margin: [0.3, 0.3], 
+    margin: [0.3, 0.3], // 上下の余白
     filename: fileName,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true, letterRendering: true },
     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-    // ↓ これを追加することで不自然な切れ目を防ぎます
+    // 不自然な切れ目を防ぐ設定を追加
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
 
