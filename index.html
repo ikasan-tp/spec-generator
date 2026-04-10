@@ -1134,7 +1134,7 @@ function update() {
   setText('s-purpose-v', purpose);
   setText('s-deadline-v', deadline?fmtDate(deadline):null);
   if(priority){
-    const map={high:['badge-high','高（URGENT）'],medium:['badge-medium','中'],low:['badge-low','低']};
+    const map={high:['badge-high','高'],medium:['badge-medium','中'],low:['badge-low','低']};
     const[cls,lbl]=map[priority];
     document.getElementById('s-priority-v').innerHTML=`<span class="spec-badge ${cls}">${lbl}</span>`;
   } else { setText('s-priority-v',null); }
