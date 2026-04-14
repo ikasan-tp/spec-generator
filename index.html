@@ -84,6 +84,7 @@ select option{background:var(--surface2)}
 .ng-form-body{padding:14px}
 .ng-form-body textarea{border-color:rgba(231,76,60,.3)}
 .ng-form-body textarea:focus{border-color:var(--danger);box-shadow:0 0 0 3px rgba(231,76,60,.12)}
+.ng-form-block.excluded{opacity:.45;border-left-color:var(--border2)}
 
 /* ===== COLORS ===== */
 .color-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -694,10 +695,14 @@ select option{background:var(--surface2)}
   </div>
 
   <!-- NG事項（共通） -->
-  <div class="ng-form-block">
+  <div class="ng-form-block" id="db-ng">
     <div class="ng-form-header">
       <span>🚫</span>
       <span class="ng-form-title">NG事項・絶対に避けてほしいこと</span>
+      <label class="block-toggle" style="margin-left:auto;color:rgba(255,255,255,.5)">
+        <input type="checkbox" id="cb-ng" checked onchange="toggleBlock('ng',this.checked)">
+        <span class="block-toggle-label" style="color:rgba(255,255,255,.45)">出力に含める</span>
+      </label>
     </div>
     <div class="ng-form-body">
       <div class="field">
@@ -961,7 +966,7 @@ select option{background:var(--surface2)}
       </div>
 
       <!-- NG事項 -->
-      <div class="spec-section">
+      <div class="spec-section" id="s-ng-section">
         <div class="spec-section-title">禁止・NG事項</div>
         <div class="spec-ng-section">
           <div class="spec-ng-header">
@@ -1266,13 +1271,19 @@ function update() {
   }
 
   // NG
-  const ngContainer = document.getElementById('s-ng-items');
-  if(ng){
-    const lines=ng.split('\n').filter(l=>l.trim());
-    if(lines.length>0){
-      ngContainer.innerHTML=lines.map(l=>`<div class="spec-ng-item">${escapeHtml(l.replace(/^[・\-\*\s]+/,''))}</div>`).join('');
+  const ngSection = document.getElementById('s-ng-section');
+  if (blockVisible('ng')) {
+    ngSection.style.display = '';
+    const ngContainer = document.getElementById('s-ng-items');
+    if(ng){
+      const lines=ng.split('\n').filter(l=>l.trim());
+      if(lines.length>0){
+        ngContainer.innerHTML=lines.map(l=>`<div class="spec-ng-item">${escapeHtml(l.replace(/^[・\-\*\s]+/,''))}</div>`).join('');
+      } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
     } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
-  } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
+  } else {
+    ngSection.style.display = 'none';
+  }
 
   // Color palette
   const paletteSection = document.getElementById('s-palette-section');
@@ -1338,6 +1349,7 @@ function clearForm() {
   document.querySelectorAll('.dynamic-block').forEach(b=>b.classList.remove('excluded'));
   document.querySelectorAll('.block-toggle input[type=checkbox]').forEach(cb=>cb.checked=true);
   document.getElementById('cb-palette').checked=true;
+  document.getElementById('cb-ng').checked=true;
   renderPreviews();
   update();
 }
