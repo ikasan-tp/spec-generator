@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>メタゲーム明石-作業指示書</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23e74c3c'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-size='20' font-weight='700' fill='white'>M</text></svg>">
+<title>作業指示書</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -157,7 +156,7 @@ select option{background:var(--surface2)}
 .spec-ng-body{padding:14px 16px}
 .spec-ng-items{display:flex;flex-direction:column;gap:6px}
 .spec-ng-item{display:flex;align-items:flex-start;gap:8px;font-size:.88rem;color:#c0392b;font-weight:500;line-height:1.5}
-.spec-ng-item::before{content:'✗';color:#e74c3c;font-weight:700;flex-shrink:0;margin-top:1px}
+.spec-ng-item::before{content:'×';color:#e74c3c;font-weight:700;flex-shrink:0;margin-top:1px}
 .spec-ng-empty{font-size:.82rem;color:#e74c3c;font-style:italic;opacity:.6}
 
 /* Colors */
@@ -176,7 +175,7 @@ select option{background:var(--surface2)}
 /* Checklist */
 .spec-checklist{list-style:none;display:flex;flex-direction:column;gap:6px}
 .spec-checklist li{display:flex;align-items:center;gap:10px;font-size:.86rem;color:#2a2a3e;padding:8px 12px;background:#f7f7fb;border-radius:7px;border:1px solid #ededf5}
-.spec-checklist li::before{content:'☐';color:#6c5ce7;font-size:14px;flex-shrink:0}
+.spec-checklist li::before{content:'—';color:#6c5ce7;font-size:14px;flex-shrink:0}
 
 /* Notes */
 .spec-notes{background:#f7f7fb;border:1px solid #ededf5;border-radius:10px;padding:1rem 1.2rem;font-size:.87rem;line-height:1.8;color:#3a3a4e;white-space:pre-wrap}
@@ -214,12 +213,12 @@ select option{background:var(--surface2)}
 
 <header>
   <div class="logo">
-    <div class="logo-mark">✦</div>
-    作業指示書ジェネレーター
+    <div class="logo-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" fill="rgba(255,255,255,0.9)" stroke="none"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg></div>
+    作業指示書
   </div>
   <div class="header-actions">
-    <button class="btn" onclick="clearForm()">🗑 クリア</button>
-    <button class="btn btn-primary" onclick="downloadPDF()">📄 PDF出力</button>
+    <button class="btn" onclick="clearForm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> クリア</button>
+    <button class="btn btn-primary" onclick="downloadPDF()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> PDF出力</button>
   </div>
 </header>
 
@@ -230,7 +229,7 @@ select option{background:var(--surface2)}
   <!-- 基本情報 -->
   <div class="form-block">
     <div class="form-block-header">
-      <span>📋</span>
+      <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2"/><path d="M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2"/><path d="M9 12h6M9 16h4"/></svg></span>
       <span class="form-block-title">基本情報</span>
     </div>
     <div class="form-block-body">
@@ -272,9 +271,9 @@ select option{background:var(--surface2)}
           <label>優先度</label>
           <select id="f-priority" onchange="update()">
             <option value="">選択</option>
-            <option value="high">🔴 高</option>
-            <option value="medium">🟡 中</option>
-            <option value="low">🟢 低</option>
+            <option value="high">高</option>
+            <option value="medium">中</option>
+            <option value="low">低</option>
           </select>
         </div>
       </div>
@@ -284,33 +283,33 @@ select option{background:var(--surface2)}
   <!-- 制作領域 -->
   <div class="form-block">
     <div class="form-block-header">
-      <span>🎯</span>
+      <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg></span>
       <span class="form-block-title">制作領域を選択</span>
     </div>
     <div class="form-block-body">
       <div class="type-grid">
         <div class="type-card" onclick="selectType('illust',this)">
-          <span class="type-card-icon">🎨</span>
+          <span class="type-card-icon" style="display:flex;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
           <span class="type-card-label">イラスト制作</span>
         </div>
         <div class="type-card" onclick="selectType('design',this)">
-          <span class="type-card-icon">🖥</span>
+          <span class="type-card-icon" style="display:flex;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M2 3h20a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 21h8M12 17v4"/></svg></span>
           <span class="type-card-label">デザイン制作</span>
         </div>
         <div class="type-card" onclick="selectType('3dcg',this)">
-          <span class="type-card-icon">🧊</span>
+          <span class="type-card-icon" style="display:flex;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg></span>
           <span class="type-card-label">3DCG制作</span>
         </div>
         <div class="type-card" onclick="selectType('video',this)">
-          <span class="type-card-icon">🎬</span>
+          <span class="type-card-icon" style="display:flex;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M19.82 2H4.18A2.18 2.18 0 0 0 2 4.18v15.64A2.18 2.18 0 0 0 4.18 22h15.64A2.18 2.18 0 0 0 22 19.82V4.18A2.18 2.18 0 0 0 19.82 2z"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg></span>
           <span class="type-card-label">動画制作</span>
         </div>
         <div class="type-card" onclick="selectType('image',this)">
-          <span class="type-card-icon">🖼</span>
+          <span class="type-card-icon" style="display:flex;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14z"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></span>
           <span class="type-card-label">画像加工</span>
         </div>
         <div class="type-card" onclick="selectType('other',this)">
-          <span class="type-card-icon">📦</span>
+          <span class="type-card-icon" style="display:flex;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg></span>
           <span class="type-card-label">その他</span>
         </div>
       </div>
@@ -323,7 +322,7 @@ select option{background:var(--surface2)}
     <!-- 技術仕様（イラスト） -->
     <div class="dynamic-block" id="db-illust-spec">
       <div class="dynamic-block-header">
-        <span>📐</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg></span>
         <span class="dynamic-block-title">技術仕様・サイズ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('illust-spec',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -341,7 +340,7 @@ select option{background:var(--surface2)}
     <!-- 被写体・キャラクター -->
     <div class="dynamic-block" id="db-illust-char">
       <div class="dynamic-block-header">
-        <span>🧑‍🎨</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <span class="dynamic-block-title">被写体・キャラクター</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('illust-char',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -355,7 +354,7 @@ select option{background:var(--surface2)}
     <!-- 世界観 -->
     <div class="dynamic-block" id="db-illust-world">
       <div class="dynamic-block-header">
-        <span>🌍</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
         <span class="dynamic-block-title">世界観・トンマナ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('illust-world',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -368,7 +367,7 @@ select option{background:var(--surface2)}
     <!-- 構図 -->
     <div class="dynamic-block" id="db-illust-comp">
       <div class="dynamic-block-header">
-        <span>📐</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg></span>
         <span class="dynamic-block-title">構図・アングル</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('illust-comp',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -381,7 +380,7 @@ select option{background:var(--surface2)}
     <!-- ライティング -->
     <div class="dynamic-block" id="db-illust-light">
       <div class="dynamic-block-header">
-        <span>🌈</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
         <span class="dynamic-block-title">ライティング・色彩</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('illust-light',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -397,7 +396,7 @@ select option{background:var(--surface2)}
     <!-- 技術仕様（デザイン） -->
     <div class="dynamic-block" id="db-design-spec">
       <div class="dynamic-block-header">
-        <span>📐</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg></span>
         <span class="dynamic-block-title">技術仕様・サイズ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('design-spec',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -427,7 +426,7 @@ select option{background:var(--surface2)}
     <!-- テキスト・コピー -->
     <div class="dynamic-block" id="db-design-text">
       <div class="dynamic-block-header">
-        <span>✍️</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
         <span class="dynamic-block-title">テキスト・コピー</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('design-text',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -445,7 +444,7 @@ select option{background:var(--surface2)}
     <!-- レイアウト -->
     <div class="dynamic-block" id="db-design-layout">
       <div class="dynamic-block-header">
-        <span>🗂</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
         <span class="dynamic-block-title">レイアウト・構成</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('design-layout',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -460,7 +459,7 @@ select option{background:var(--surface2)}
     <!-- デザインのトンマナ -->
     <div class="dynamic-block" id="db-design-tone">
       <div class="dynamic-block-header">
-        <span>🎨</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
         <span class="dynamic-block-title">デザイントンマナ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('design-tone',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -476,7 +475,7 @@ select option{background:var(--surface2)}
     <!-- ターゲット環境 -->
     <div class="dynamic-block" id="db-3dcg-env">
       <div class="dynamic-block-header">
-        <span>🖥</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M2 3h20a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 21h8M12 17v4"/></svg></span>
         <span class="dynamic-block-title">ターゲット環境・ソフトウェア</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('3dcg-env',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -492,7 +491,7 @@ select option{background:var(--surface2)}
     <!-- 仕様制限 -->
     <div class="dynamic-block" id="db-3dcg-spec">
       <div class="dynamic-block-header">
-        <span>📊</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M12 20V10M18 20V4M6 20v-4"/></svg></span>
         <span class="dynamic-block-title">仕様・ポリゴン制限</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('3dcg-spec',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -504,7 +503,7 @@ select option{background:var(--surface2)}
     <!-- マテリアル -->
     <div class="dynamic-block" id="db-3dcg-mat">
       <div class="dynamic-block-header">
-        <span>✨</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
         <span class="dynamic-block-title">マテリアル・シェーダー</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('3dcg-mat',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -516,7 +515,7 @@ select option{background:var(--surface2)}
     <!-- リギング -->
     <div class="dynamic-block" id="db-3dcg-rig">
       <div class="dynamic-block-header">
-        <span>🦴</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
         <span class="dynamic-block-title">トポロジー・リギング</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('3dcg-rig',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -533,7 +532,7 @@ select option{background:var(--surface2)}
     <!-- 技術仕様（動画） -->
     <div class="dynamic-block" id="db-video-spec">
       <div class="dynamic-block-header">
-        <span>📐</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg></span>
         <span class="dynamic-block-title">技術仕様・サイズ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('video-spec',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -551,7 +550,7 @@ select option{background:var(--surface2)}
     <!-- 尺・テンポ -->
     <div class="dynamic-block" id="db-video-tempo">
       <div class="dynamic-block-header">
-        <span>⏱</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
         <span class="dynamic-block-title">尺・テンポ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('video-tempo',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -565,7 +564,7 @@ select option{background:var(--surface2)}
     <!-- タイムライン -->
     <div class="dynamic-block" id="db-video-timeline">
       <div class="dynamic-block-header">
-        <span>📋</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2"/><path d="M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2"/><path d="M9 12h6M9 16h4"/></svg></span>
         <span class="dynamic-block-title">構成・タイムライン</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('video-timeline',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -579,7 +578,7 @@ select option{background:var(--surface2)}
     <!-- 演出 -->
     <div class="dynamic-block" id="db-video-effect">
       <div class="dynamic-block-header">
-        <span>🎭</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5"/><path d="M2 9l10 10"/></svg></span>
         <span class="dynamic-block-title">演出要素</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('video-effect',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -592,7 +591,7 @@ select option{background:var(--surface2)}
     <!-- 音声 -->
     <div class="dynamic-block" id="db-video-audio">
       <div class="dynamic-block-header">
-        <span>🎵</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
         <span class="dynamic-block-title">音声・BGM</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('video-audio',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -609,7 +608,7 @@ select option{background:var(--surface2)}
     <!-- 技術仕様（画像加工） -->
     <div class="dynamic-block" id="db-image-spec">
       <div class="dynamic-block-header">
-        <span>📐</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg></span>
         <span class="dynamic-block-title">技術仕様・サイズ</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('image-spec',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -627,7 +626,7 @@ select option{background:var(--surface2)}
     <!-- 元画像 -->
     <div class="dynamic-block" id="db-image-source">
       <div class="dynamic-block-header">
-        <span>🖼</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14z"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></span>
         <span class="dynamic-block-title">元画像の状況</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('image-source',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -642,7 +641,7 @@ select option{background:var(--surface2)}
     <!-- 加工目的 -->
     <div class="dynamic-block" id="db-image-goal">
       <div class="dynamic-block-header">
-        <span>🎯</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg></span>
         <span class="dynamic-block-title">加工の目的</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('image-goal',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -654,7 +653,7 @@ select option{background:var(--surface2)}
     <!-- 処理内容 -->
     <div class="dynamic-block" id="db-image-process">
       <div class="dynamic-block-header">
-        <span>⚙️</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
         <span class="dynamic-block-title">具体的な処理内容</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('image-process',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -672,7 +671,7 @@ select option{background:var(--surface2)}
   <div class="dynamic-section" id="dyn-other">
     <div class="dynamic-block" id="db-other-detail">
       <div class="dynamic-block-header">
-        <span>📦</span>
+        <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg></span>
         <span class="dynamic-block-title">作業内容・詳細</span>
         <label class="block-toggle"><input type="checkbox" checked onchange="toggleBlock('other-detail',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
       </div>
@@ -697,7 +696,7 @@ select option{background:var(--surface2)}
   <!-- NG事項（共通） -->
   <div class="ng-form-block">
     <div class="ng-form-header">
-      <span>🚫</span>
+      <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg></span>
       <span class="ng-form-title">NG事項・絶対に避けてほしいこと</span>
     </div>
     <div class="ng-form-body">
@@ -711,9 +710,9 @@ select option{background:var(--surface2)}
   <!-- カラーパレット（共通） -->
   <div class="form-block">
     <div class="form-block-header">
-      <span>🎨</span>
+      <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
       <span class="form-block-title">カラーパレット</span>
-      <label class="block-toggle" style="margin-left:auto"><input type="checkbox" id="cb-palette" onchange="toggleBlock('palette',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
+      <label class="block-toggle" style="margin-left:auto"><input type="checkbox" id="cb-palette" checked onchange="toggleBlock('palette',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
     </div>
     <div class="form-block-body">
       <div class="color-row" id="colorRow">
@@ -741,7 +740,7 @@ select option{background:var(--surface2)}
   <!-- 参考画像・URL（共通） -->
   <div class="form-block">
     <div class="form-block-header">
-      <span>🖼</span>
+      <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14z"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></span>
       <span class="form-block-title">参考画像・素材</span>
     </div>
     <div class="form-block-body">
@@ -751,7 +750,7 @@ select option{background:var(--surface2)}
         ondragleave="this.classList.remove('dragover')"
         ondrop="handleDrop(event)">
         <input type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(event)">
-        <div class="upload-icon">📂</div>
+        <div class="upload-icon" style="display:flex;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg></div>
         <div class="upload-text">
           <strong>クリックまたはD&D</strong>で画像を追加<br>
           参考画像・素材・ロゴなど（PNG / JPG / GIF）
@@ -768,7 +767,7 @@ select option{background:var(--surface2)}
   <!-- 納品・備考（共通） -->
   <div class="form-block">
     <div class="form-block-header">
-      <span>📦</span>
+      <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg></span>
       <span class="form-block-title">納品・備考</span>
     </div>
     <div class="form-block-body">
@@ -796,13 +795,13 @@ select option{background:var(--surface2)}
       <h1 id="s-title">案件名を入力してください</h1>
       <div class="spec-meta-row">
         <div class="spec-meta-item" id="s-meta-deadline" style="display:none">
-          <span>📅</span>納期：<strong id="s-deadline"></strong>
+          <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M3 4h18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M16 2v4M8 2v4M1 10h22"/></svg></span>納期：<strong id="s-deadline"></strong>
         </div>
         <div class="spec-meta-item" id="s-meta-worker" style="display:none">
-          <span>👤</span>担当：<strong id="s-worker-v"></strong>
+          <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>担当：<strong id="s-worker-v"></strong>
         </div>
         <div class="spec-meta-item">
-          <span>📄</span>作成：<strong id="s-created"></strong>
+          <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></span>作成：<strong id="s-created"></strong>
         </div>
       </div>
     </div>
@@ -831,7 +830,7 @@ select option{background:var(--surface2)}
       <!-- ===== DYNAMIC PREVIEW: ILLUST ===== -->
       <div id="sp-illust" style="display:none">
         <div class="spec-section" id="sp-illust-spec" style="display:none">
-          <div class="spec-section-title">🎨 イラスト — 技術仕様</div>
+          <div class="spec-section-title">イラスト — 技術仕様</div>
           <div class="spec-grid">
             <div class="spec-field"><div class="spec-field-label">サイズ</div><div class="spec-field-value" id="sp-i-size">—</div></div>
             <div class="spec-field"><div class="spec-field-label">解像度</div><div class="spec-field-value" id="sp-i-res">—</div></div>
@@ -839,19 +838,19 @@ select option{background:var(--surface2)}
           </div>
         </div>
         <div class="spec-section" id="sp-illust-char" style="display:none">
-          <div class="spec-section-title">🎨 イラスト — 被写体・キャラクター</div>
+          <div class="spec-section-title">イラスト — 被写体・キャラクター</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-i-char"></div></div>
         </div>
         <div class="spec-section" id="sp-illust-world" style="display:none">
-          <div class="spec-section-title">🎨 イラスト — 世界観・トンマナ</div>
+          <div class="spec-section-title">イラスト — 世界観・トンマナ</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-i-world"></div></div>
         </div>
         <div class="spec-section" id="sp-illust-comp" style="display:none">
-          <div class="spec-section-title">🎨 イラスト — 構図・アングル</div>
+          <div class="spec-section-title">イラスト — 構図・アングル</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-i-comp"></div></div>
         </div>
         <div class="spec-section" id="sp-illust-light" style="display:none">
-          <div class="spec-section-title">🎨 イラスト — ライティング・色彩</div>
+          <div class="spec-section-title">イラスト — ライティング・色彩</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-i-light"></div></div>
         </div>
       </div>
@@ -859,7 +858,7 @@ select option{background:var(--surface2)}
       <!-- ===== DYNAMIC PREVIEW: DESIGN ===== -->
       <div id="sp-design" style="display:none">
         <div class="spec-section" id="sp-design-spec" style="display:none">
-          <div class="spec-section-title">🖥 デザイン — 技術仕様</div>
+          <div class="spec-section-title">デザイン — 技術仕様</div>
           <div class="spec-grid">
             <div class="spec-field full"><div class="spec-field-label">制作物の種類</div><div class="spec-field-value" id="sp-d-kind">—</div></div>
             <div class="spec-field"><div class="spec-field-label">サイズ</div><div class="spec-field-value" id="sp-d-size">—</div></div>
@@ -868,15 +867,15 @@ select option{background:var(--surface2)}
           </div>
         </div>
         <div class="spec-section" id="sp-design-text" style="display:none">
-          <div class="spec-section-title">🖥 デザイン — テキスト・コピー</div>
+          <div class="spec-section-title">デザイン — テキスト・コピー</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-d-text"></div></div>
         </div>
         <div class="spec-section" id="sp-design-layout" style="display:none">
-          <div class="spec-section-title">🖥 デザイン — レイアウト・構成</div>
+          <div class="spec-section-title">デザイン — レイアウト・構成</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-d-layout"></div></div>
         </div>
         <div class="spec-section" id="sp-design-tone" style="display:none">
-          <div class="spec-section-title">🖥 デザイン — トンマナ</div>
+          <div class="spec-section-title">デザイン — トンマナ</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-d-tone"></div></div>
         </div>
       </div>
@@ -884,19 +883,19 @@ select option{background:var(--surface2)}
       <!-- ===== DYNAMIC PREVIEW: 3DCG ===== -->
       <div id="sp-3dcg" style="display:none">
         <div class="spec-section" id="sp-3dcg-env" style="display:none">
-          <div class="spec-section-title">🧊 3DCG — ターゲット環境・ソフトウェア</div>
+          <div class="spec-section-title">3DCG — ターゲット環境・ソフトウェア</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-c-env"></div></div>
         </div>
         <div class="spec-section" id="sp-3dcg-spec" style="display:none">
-          <div class="spec-section-title">🧊 3DCG — 仕様・ポリゴン制限</div>
+          <div class="spec-section-title">3DCG — 仕様・ポリゴン制限</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-c-spec"></div></div>
         </div>
         <div class="spec-section" id="sp-3dcg-mat" style="display:none">
-          <div class="spec-section-title">🧊 3DCG — マテリアル・シェーダー</div>
+          <div class="spec-section-title">3DCG — マテリアル・シェーダー</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-c-mat"></div></div>
         </div>
         <div class="spec-section" id="sp-3dcg-rig" style="display:none">
-          <div class="spec-section-title">🧊 3DCG — トポロジー・リギング</div>
+          <div class="spec-section-title">3DCG — トポロジー・リギング</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-c-rig"></div></div>
         </div>
       </div>
@@ -904,7 +903,7 @@ select option{background:var(--surface2)}
       <!-- ===== DYNAMIC PREVIEW: VIDEO ===== -->
       <div id="sp-video" style="display:none">
         <div class="spec-section" id="sp-video-spec" style="display:none">
-          <div class="spec-section-title">🎬 動画 — 技術仕様</div>
+          <div class="spec-section-title">動画 — 技術仕様</div>
           <div class="spec-grid">
             <div class="spec-field"><div class="spec-field-label">サイズ</div><div class="spec-field-value" id="sp-v-size">—</div></div>
             <div class="spec-field"><div class="spec-field-label">fps</div><div class="spec-field-value" id="sp-v-fps">—</div></div>
@@ -912,19 +911,19 @@ select option{background:var(--surface2)}
           </div>
         </div>
         <div class="spec-section" id="sp-video-tempo" style="display:none">
-          <div class="spec-section-title">🎬 動画 — 尺・テンポ</div>
+          <div class="spec-section-title">動画 — 尺・テンポ</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-v-tempo"></div></div>
         </div>
         <div class="spec-section" id="sp-video-timeline" style="display:none">
-          <div class="spec-section-title">🎬 動画 — 構成・タイムライン</div>
+          <div class="spec-section-title">動画 — 構成・タイムライン</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-v-timeline"></div></div>
         </div>
         <div class="spec-section" id="sp-video-effect" style="display:none">
-          <div class="spec-section-title">🎬 動画 — 演出要素</div>
+          <div class="spec-section-title">動画 — 演出要素</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-v-effect"></div></div>
         </div>
         <div class="spec-section" id="sp-video-audio" style="display:none">
-          <div class="spec-section-title">🎬 動画 — 音声・BGM</div>
+          <div class="spec-section-title">動画 — 音声・BGM</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-v-audio"></div></div>
         </div>
       </div>
@@ -932,7 +931,7 @@ select option{background:var(--surface2)}
       <!-- ===== DYNAMIC PREVIEW: IMAGE ===== -->
       <div id="sp-image" style="display:none">
         <div class="spec-section" id="sp-image-spec" style="display:none">
-          <div class="spec-section-title">🖼 画像加工 — 技術仕様</div>
+          <div class="spec-section-title">画像加工 — 技術仕様</div>
           <div class="spec-grid">
             <div class="spec-field"><div class="spec-field-label">仕上がりサイズ</div><div class="spec-field-value" id="sp-m-size">—</div></div>
             <div class="spec-field"><div class="spec-field-label">解像度</div><div class="spec-field-value" id="sp-m-res">—</div></div>
@@ -940,15 +939,15 @@ select option{background:var(--surface2)}
           </div>
         </div>
         <div class="spec-section" id="sp-image-source" style="display:none">
-          <div class="spec-section-title">🖼 画像加工 — 元画像の状況</div>
+          <div class="spec-section-title">画像加工 — 元画像の状況</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-m-source"></div></div>
         </div>
         <div class="spec-section" id="sp-image-goal" style="display:none">
-          <div class="spec-section-title">🖼 画像加工 — 加工の目的</div>
+          <div class="spec-section-title">画像加工 — 加工の目的</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-m-goal"></div></div>
         </div>
         <div class="spec-section" id="sp-image-process" style="display:none">
-          <div class="spec-section-title">🖼 画像加工 — 具体的な処理内容</div>
+          <div class="spec-section-title">画像加工 — 具体的な処理内容</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-m-process"></div></div>
         </div>
       </div>
@@ -956,7 +955,7 @@ select option{background:var(--surface2)}
       <!-- ===== DYNAMIC PREVIEW: OTHER ===== -->
       <div id="sp-other" style="display:none">
         <div class="spec-section" id="sp-other-detail" style="display:none">
-          <div class="spec-section-title">📦 作業内容・詳細</div>
+          <div class="spec-section-title">作業内容・詳細</div>
           <div class="spec-detail-block"><div class="spec-detail-value" id="sp-o-detail"></div></div>
         </div>
       </div>
@@ -966,8 +965,8 @@ select option{background:var(--surface2)}
         <div class="spec-section-title">禁止・NG事項</div>
         <div class="spec-ng-section">
           <div class="spec-ng-header">
-            <span>🚫</span>
-            <span class="spec-ng-header-text">以下は絶対に行わないこと — DO NOT</span>
+            <span style="display:flex;align-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg></span>
+            <span class="spec-ng-header-text" style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" stroke="white"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/><path d="M4.93 4.93l14.14 14.14"/></svg> 以下は絶対に行わないこと — DO NOT</span>
           </div>
           <div class="spec-ng-body">
             <div class="spec-ng-items" id="s-ng-items">
@@ -1026,15 +1025,15 @@ select option{background:var(--surface2)}
 let selectedType = '';
 const uploadedImages = [];
 let colorCount = 3;
-const hiddenBlocks = new Set(['palette']); // blocks excluded from output
+const hiddenBlocks = new Set(); // blocks excluded from output
 
 const typeLabels = {
-  illust: '🎨 イラスト制作',
-  design: '🖥 デザイン制作',
-  '3dcg': '🧊 3DCG制作',
-  video:  '🎬 動画制作',
-  image:  '🖼 画像加工',
-  other:  '📦 その他'
+  illust: 'イラスト制作',
+  design: 'デザイン制作',
+  '3dcg': '3DCG制作',
+  video:  '動画制作',
+  image:  '画像加工',
+  other:  'その他'
 };
 
 // Init dates
@@ -1101,7 +1100,7 @@ function loadImages(files) {
 }
 function renderPreviews() {
   document.getElementById('imagePreviews').innerHTML = uploadedImages.map((img,i) =>
-    `<div class="preview-item"><img src="${img.src}" alt="${img.name}"><button class="remove-img" onclick="removeImage(${i})">✕</button></div>`
+    `<div class="preview-item"><img src="${img.src}" alt="${img.name}"><button class="remove-img" onclick="removeImage(${i})"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>`
   ).join('');
 }
 function removeImage(i) { uploadedImages.splice(i,1); renderPreviews(); update(); }
@@ -1338,8 +1337,7 @@ function clearForm() {
   document.querySelectorAll('.dynamic-section').forEach(s=>s.classList.remove('visible'));
   document.querySelectorAll('.dynamic-block').forEach(b=>b.classList.remove('excluded'));
   document.querySelectorAll('.block-toggle input[type=checkbox]').forEach(cb=>cb.checked=true);
-  document.getElementById('cb-palette').checked=false;
-  hiddenBlocks.add('palette');
+  document.getElementById('cb-palette').checked=true;
   renderPreviews();
   update();
 }
