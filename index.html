@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>作業指示書</title>
+<title>メタゲーム明石-作業指示書</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23e74c3c'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-size='20' font-weight='700' fill='white'>M</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -84,7 +85,6 @@ select option{background:var(--surface2)}
 .ng-form-body{padding:14px}
 .ng-form-body textarea{border-color:rgba(231,76,60,.3)}
 .ng-form-body textarea:focus{border-color:var(--danger);box-shadow:0 0 0 3px rgba(231,76,60,.12)}
-.ng-form-block.excluded{opacity:.45;border-left-color:var(--border2)}
 
 /* ===== COLORS ===== */
 .color-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -215,7 +215,7 @@ select option{background:var(--surface2)}
 <header>
   <div class="logo">
     <div class="logo-mark">✦</div>
-    作業指示書
+    作業指示書ジェネレーター
   </div>
   <div class="header-actions">
     <button class="btn" onclick="clearForm()">🗑 クリア</button>
@@ -695,14 +695,10 @@ select option{background:var(--surface2)}
   </div>
 
   <!-- NG事項（共通） -->
-  <div class="ng-form-block" id="db-ng">
+  <div class="ng-form-block">
     <div class="ng-form-header">
       <span>🚫</span>
       <span class="ng-form-title">NG事項・絶対に避けてほしいこと</span>
-      <label class="block-toggle" style="margin-left:auto;color:rgba(255,255,255,.5)">
-        <input type="checkbox" id="cb-ng" checked onchange="toggleBlock('ng',this.checked)">
-        <span class="block-toggle-label" style="color:rgba(255,255,255,.45)">出力に含める</span>
-      </label>
     </div>
     <div class="ng-form-body">
       <div class="field">
@@ -717,7 +713,7 @@ select option{background:var(--surface2)}
     <div class="form-block-header">
       <span>🎨</span>
       <span class="form-block-title">カラーパレット</span>
-      <label class="block-toggle" style="margin-left:auto"><input type="checkbox" id="cb-palette" checked onchange="toggleBlock('palette',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
+      <label class="block-toggle" style="margin-left:auto"><input type="checkbox" id="cb-palette" onchange="toggleBlock('palette',this.checked)"><span class="block-toggle-label">出力に含める</span></label>
     </div>
     <div class="form-block-body">
       <div class="color-row" id="colorRow">
@@ -966,7 +962,7 @@ select option{background:var(--surface2)}
       </div>
 
       <!-- NG事項 -->
-      <div class="spec-section" id="s-ng-section">
+      <div class="spec-section">
         <div class="spec-section-title">禁止・NG事項</div>
         <div class="spec-ng-section">
           <div class="spec-ng-header">
@@ -1030,7 +1026,7 @@ select option{background:var(--surface2)}
 let selectedType = '';
 const uploadedImages = [];
 let colorCount = 3;
-const hiddenBlocks = new Set(); // blocks excluded from output
+const hiddenBlocks = new Set(['palette']); // blocks excluded from output
 
 const typeLabels = {
   illust: '🎨 イラスト制作',
@@ -1271,19 +1267,13 @@ function update() {
   }
 
   // NG
-  const ngSection = document.getElementById('s-ng-section');
-  if (blockVisible('ng')) {
-    ngSection.style.display = '';
-    const ngContainer = document.getElementById('s-ng-items');
-    if(ng){
-      const lines=ng.split('\n').filter(l=>l.trim());
-      if(lines.length>0){
-        ngContainer.innerHTML=lines.map(l=>`<div class="spec-ng-item">${escapeHtml(l.replace(/^[・\-\*\s]+/,''))}</div>`).join('');
-      } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
+  const ngContainer = document.getElementById('s-ng-items');
+  if(ng){
+    const lines=ng.split('\n').filter(l=>l.trim());
+    if(lines.length>0){
+      ngContainer.innerHTML=lines.map(l=>`<div class="spec-ng-item">${escapeHtml(l.replace(/^[・\-\*\s]+/,''))}</div>`).join('');
     } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
-  } else {
-    ngSection.style.display = 'none';
-  }
+  } else { ngContainer.innerHTML='<div class="spec-ng-empty">NG事項を左のフォームに入力してください</div>'; }
 
   // Color palette
   const paletteSection = document.getElementById('s-palette-section');
@@ -1348,8 +1338,8 @@ function clearForm() {
   document.querySelectorAll('.dynamic-section').forEach(s=>s.classList.remove('visible'));
   document.querySelectorAll('.dynamic-block').forEach(b=>b.classList.remove('excluded'));
   document.querySelectorAll('.block-toggle input[type=checkbox]').forEach(cb=>cb.checked=true);
-  document.getElementById('cb-palette').checked=true;
-  document.getElementById('cb-ng').checked=true;
+  document.getElementById('cb-palette').checked=false;
+  hiddenBlocks.add('palette');
   renderPreviews();
   update();
 }
