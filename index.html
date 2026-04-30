@@ -1572,6 +1572,10 @@ function setSyncStatus(state) {
   el.style.color = state === 'error' ? 'var(--danger-bright)' : 'var(--text3)';
 }
 
+// ── あいうえお順ソート ──
+function sortJa(arr) { return arr.sort((a,b) => a.localeCompare(b, 'ja', {sensitivity:'base'})); }
+function sortJaObj(arr) { return arr.sort((a,b) => a.name.localeCompare(b.name, 'ja', {sensitivity:'base'})); }
+
 // ── Firebase 読み込み ──
 async function loadFromFirebase() {
   setSyncStatus('loading');
@@ -1584,13 +1588,12 @@ async function loadFromFirebase() {
     const iData = await iRes.json();
 
     if (Array.isArray(wData) && wData.length > 0) {
-      WORKERS = wData;
+      WORKERS = sortJa(wData);
     } else {
-      // 初回：デフォルトをFirebaseに書き込む
       await saveWorkersToFirebase();
     }
     if (Array.isArray(iData) && iData.length > 0) {
-      INSTRUCTORS = iData;
+      INSTRUCTORS = sortJaObj(iData);
     } else {
       await saveInstructorsToFirebase();
     }
@@ -1704,7 +1707,7 @@ function addNmWorker() {
   if (!name) return;
   if (WORKERS.includes(name)) { inp.select(); return; }
   WORKERS.push(name);
-  WORKERS.sort((a,b) => a.localeCompare(b, 'ja'));
+  sortJa(WORKERS);
   saveLists(); rebuildSelects(); renderNmWorkers();
   inp.value = '';
 }
@@ -1717,6 +1720,7 @@ function resetNmWorkers() {
   if (!confirm('利用者リストをデフォルトに戻しますか？\n（現在のリストは消えます）')) return;
   WORKERS.length = 0;
   DEFAULT_WORKERS.forEach(n => WORKERS.push(n));
+  sortJa(WORKERS);
   saveLists(); rebuildSelects(); renderNmWorkers();
 }
 
@@ -1758,7 +1762,7 @@ function addNmInstructor() {
     document.getElementById('nm-instructor-name').select(); return;
   }
   INSTRUCTORS.push({ name, software: [...nmInstructorSwPending] });
-  INSTRUCTORS.sort((a,b) => a.name.localeCompare(b.name, 'ja'));
+  sortJaObj(INSTRUCTORS);
   nmInstructorSwPending = [];
   document.getElementById('nm-instructor-name').value = '';
   renderNmInstructorSwPreview();
@@ -1773,6 +1777,7 @@ function resetNmInstructors() {
   if (!confirm('指示者リストをデフォルトに戻しますか？\n（現在のリストは消えます）')) return;
   INSTRUCTORS.length = 0;
   DEFAULT_INSTRUCTORS.forEach(s => INSTRUCTORS.push({...s, software:[...s.software]}));
+  sortJaObj(INSTRUCTORS);
   saveLists(); rebuildSelects(); renderNmInstructors();
 }
 
