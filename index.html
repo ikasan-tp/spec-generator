@@ -204,6 +204,35 @@ select option{background:var(--surface2)}
 .spec-url-list{display:flex;flex-direction:column;gap:4px}
 .spec-url-list a{color:#6c5ce7;text-decoration:underline;font-size:.84rem;word-break:break-all}
 
+/* ===== NAME MANAGER MODAL ===== */
+.nm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.nm-overlay.open{display:flex}
+.nm-modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-xl);width:680px;max-width:calc(100vw - 2rem);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7)}
+.nm-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.nm-title{font-size:1rem;font-weight:700}
+.nm-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;border-radius:6px}
+.nm-close:hover{background:var(--surface2);color:var(--text)}
+.nm-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0}
+.nm-tab{padding:.65rem 1.4rem;font-size:.83rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text2);border-bottom:2px solid transparent;transition:all .15s}
+.nm-tab:hover{color:var(--text)}
+.nm-tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
+.nm-body{padding:1.2rem 1.5rem;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:1rem}
+.nm-tab-panel{display:none;flex-direction:column;gap:12px}
+.nm-tab-panel.active{display:flex}
+.nm-add-row{display:flex;gap:8px;align-items:flex-start}
+.nm-add-row input,.nm-add-row select{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:.85rem;padding:8px 11px;outline:none}
+.nm-add-row input:focus,.nm-add-row select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.nm-add-row .btn{flex-shrink:0}
+.nm-chips{display:flex;flex-wrap:wrap;gap:8px}
+.nm-chip{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:5px 10px 5px 13px;font-size:.82rem}
+.nm-chip.instructor-chip{border-color:rgba(108,92,231,.4);background:rgba(108,92,231,.08)}
+.nm-chip button{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+.nm-chip button:hover{color:var(--danger-bright)}
+.nm-section-label{font-size:.75rem;font-weight:700;color:var(--text2);letter-spacing:.05em;margin-top:4px}
+.nm-sw-tags{display:flex;flex-wrap:wrap;gap:3px;margin-left:4px}
+.nm-sw-tag{font-size:.68rem;background:rgba(162,155,254,.15);border:1px solid rgba(162,155,254,.35);border-radius:5px;padding:1px 6px;color:var(--accent2)}
+.nm-info{font-size:.75rem;color:var(--text3);background:var(--surface2);border-radius:var(--radius);padding:10px 12px;line-height:1.6}
+.nm-empty{font-size:.82rem;color:var(--text3);font-style:italic}
 /* ===== PRINT ===== */
 @media print{
   *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
@@ -255,6 +284,8 @@ select option{background:var(--surface2)}
     作業指示書
   </div>
   <div class="header-actions">
+    <span id="sync-status" style="font-size:.75rem;color:var(--text3);display:flex;align-items:center;gap:4px">⏳</span>
+    <button class="btn" onclick="openNameManager()" title="名前リストを管理"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 4.93a10 10 0 0 0 0 14.14M7.76 7.76a6 6 0 0 0 0 8.49"/></svg> 名前管理</button>
     <button class="btn" onclick="clearForm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> クリア</button>
     <button class="btn btn-primary" onclick="downloadPDF()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle" ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> PDF出力</button>
   </div>
@@ -1090,6 +1121,57 @@ select option{background:var(--surface2)}
 </div><!-- /preview-panel -->
 </main>
 
+<!-- ===== NAME MANAGER MODAL ===== -->
+<div class="nm-overlay" id="nmOverlay" onclick="if(event.target===this)closeNameManager()">
+  <div class="nm-modal">
+    <div class="nm-header">
+      <span class="nm-title">👥 名前リスト管理</span>
+      <button class="nm-close" onclick="closeNameManager()">×</button>
+    </div>
+    <div class="nm-tabs">
+      <button class="nm-tab active" onclick="switchNmTab('workers',this)">利用者リスト</button>
+      <button class="nm-tab" onclick="switchNmTab('instructors',this)">指示者リスト</button>
+    </div>
+    <div class="nm-body">
+      <!-- Workers tab -->
+      <div class="nm-tab-panel active" id="nm-workers">
+        <div class="nm-section-label">新しい利用者を追加</div>
+        <div class="nm-add-row">
+          <input type="text" id="nm-worker-input" placeholder="名前を入力（例：山田）" onkeydown="if(event.key==='Enter')addNmWorker()">
+          <button class="btn btn-primary" onclick="addNmWorker()">追加</button>
+        </div>
+        <div class="nm-section-label">現在の利用者 <span id="nm-worker-count" style="color:var(--text3);font-weight:400"></span></div>
+        <div class="nm-chips" id="nm-worker-chips"></div>
+        <div class="nm-info">☁️ 追加・削除した内容はFirebaseに自動保存され、<strong>全員のPCに即時反映</strong>されます。デフォルトのリストにリセットするには「リセット」ボタンを押してください。</div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn" onclick="resetNmWorkers()" style="font-size:.75rem;padding:5px 12px;color:var(--danger-bright);border-color:rgba(231,76,60,.4)">🔄 デフォルトにリセット</button>
+        </div>
+      </div>
+      <!-- Instructors tab -->
+      <div class="nm-tab-panel" id="nm-instructors">
+        <div class="nm-section-label">新しい指示者を追加</div>
+        <div class="nm-add-row" style="flex-wrap:wrap;gap:8px">
+          <input type="text" id="nm-instructor-name" placeholder="名前（例：佐藤）" style="min-width:130px;flex:1">
+          <select id="nm-instructor-sw" style="min-width:150px;flex:1">
+            <option value="">担当ソフト（任意・複数可）</option>
+          </select>
+          <button class="btn btn-primary" onclick="addNmInstructor()">追加</button>
+        </div>
+        <div id="nm-instructor-sw-preview" style="display:none;gap:4px;flex-wrap:wrap;font-size:.75rem;color:var(--text2);align-items:center">
+          <span>選択済みソフト：</span>
+          <div class="nm-sw-tags" id="nm-instructor-sw-selected"></div>
+        </div>
+        <div class="nm-section-label">現在の指示者 <span id="nm-instructor-count" style="color:var(--text3);font-weight:400"></span></div>
+        <div class="nm-chips" id="nm-instructor-chips"></div>
+        <div class="nm-info">☁️ ソフトウェアは複数選択できます。追加した指示者は<strong>全員のPCに即時反映</strong>され、「問い合わせ先」のプリセットにも反映されます。</div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn" onclick="resetNmInstructors()" style="font-size:.75rem;padding:5px 12px;color:var(--danger-bright);border-color:rgba(231,76,60,.4)">🔄 デフォルトにリセット</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── State ──
 let selectedType = '';
@@ -1453,85 +1535,246 @@ function downloadPDF() {
 // Initial render
 update();
 
-// 【利用者リスト】
-const WORKERS = [
-  "岸",
-  "金谷",
-  "木内",
-  "増野",
-  "吉田",
-  "宮本",
-  "山尾",
-  "夫津木",
-  "玉岡",
-  "鶴田",
-  "樽谷",
-  "柏木",
-  "嶋田",
-  "村上",
-  "北村",
-  "四方",
-  "鳴瀬",
-  "柴田",
-  "生頼",
-  "寺岡",
-  "富阪",
-  "瀬川",
-  "高橋",
-  "小野",
-  "荒井",
-  "中山",
-  "日高",
-  "足立",
-  "吉永",
-  "稲月",
-  "佐賀",
-  "田中",
-  "小椋",
-  "井上",
-];
+// ── Firebase設定 ──
+const FB_URL = 'https://specgene-50bcc-default-rtdb.asia-southeast1.firebasedatabase.app';
 
-// 【指示者リスト】
-const INSTRUCTORS = [
+// ── デフォルトの名前リスト ──
+const DEFAULT_WORKERS = [
+  "岸","金谷","木内","増野","吉田","宮本","山尾","夫津木","玉岡","鶴田",
+  "樽谷","柏木","嶋田","村上","北村","四方","鳴瀬","柴田","生頼","寺岡",
+  "富阪","瀬川","高橋","小野","荒井","中山","日高","足立","吉永","稲月",
+  "佐賀","田中","小椋",
+];
+const DEFAULT_INSTRUCTORS = [
   { name: "土生田", software: ["Clip Studio", "Canva"] },
   { name: "原田",   software: ["Premiere Pro", "Photoshop"] },
-  { name: "森下",   software: ["Premiere Pro","Photoshop","Canva",] },
+  { name: "森下",   software: ["Premiere Pro"] },
   { name: "鈴木",   software: ["Blender", "Clip Studio", "Maya", "Unity", "AviUtl"] },
   { name: "角田",   software: ["Blender", "Canva"] },
 ];
 
-// 【ソフトウェアリスト】
+// ── ソフトウェアリスト ──
 const SOFTWARE_LIST = [
-  "Blender",
-  "Clip Studio",
-  "Photoshop",
-  "Illustrator",
-  "After Effects",
-  "Premiere Pro",
-  "Maya",
-  "ZBrush",
-  "Unity",
-  "Unreal Engine",
-  "Substance Painter",
-  "AviUtl",
-  "YukkuriMovieMaker",
-  "Canva",
+  "Blender","Clip Studio","Photoshop","Illustrator","After Effects",
+  "Premiere Pro","Maya","ZBrush","Unity","Unreal Engine",
+  "Substance Painter","AviUtl","YukkuriMovieMaker","Canva",
 ];
 
-window.addEventListener('DOMContentLoaded', () => {
-  const wSelect = document.getElementById('p-worker-preset');
-  const iSelect = document.getElementById('p-instructor-preset');
-  const cSelect = document.getElementById('p-contact-preset');
+let WORKERS = [...DEFAULT_WORKERS];
+let INSTRUCTORS = DEFAULT_INSTRUCTORS.map(x=>({...x,software:[...x.software]}));
 
-  WORKERS.forEach(name => {
-    wSelect.add(new Option(name, name));
+// ── 同期ステータス表示 ──
+function setSyncStatus(state) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  const icons = { loading:'⏳', ok:'☁️ 同期済み', error:'⚠️ オフライン' };
+  el.textContent = icons[state] || '';
+  el.style.color = state === 'error' ? 'var(--danger-bright)' : 'var(--text3)';
+}
+
+// ── Firebase 読み込み ──
+async function loadFromFirebase() {
+  setSyncStatus('loading');
+  try {
+    const [wRes, iRes] = await Promise.all([
+      fetch(`${FB_URL}/workers.json`),
+      fetch(`${FB_URL}/instructors.json`)
+    ]);
+    const wData = await wRes.json();
+    const iData = await iRes.json();
+
+    if (Array.isArray(wData) && wData.length > 0) {
+      WORKERS = wData;
+    } else {
+      // 初回：デフォルトをFirebaseに書き込む
+      await saveWorkersToFirebase();
+    }
+    if (Array.isArray(iData) && iData.length > 0) {
+      INSTRUCTORS = iData;
+    } else {
+      await saveInstructorsToFirebase();
+    }
+    setSyncStatus('ok');
+  } catch(e) {
+    setSyncStatus('error');
+  }
+  rebuildSelects();
+  renderNmWorkers();
+  renderNmInstructors();
+}
+
+// ── Firebase 書き込み ──
+async function saveWorkersToFirebase() {
+  try {
+    await fetch(`${FB_URL}/workers.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(WORKERS)
+    });
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); }
+}
+async function saveInstructorsToFirebase() {
+  try {
+    await fetch(`${FB_URL}/instructors.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(INSTRUCTORS)
+    });
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); }
+}
+async function saveLists() {
+  setSyncStatus('loading');
+  await Promise.all([saveWorkersToFirebase(), saveInstructorsToFirebase()]);
+}
+
+// ── ドロップダウンを再構築 ──
+function rebuildSelects() {
+  ['p-worker-preset','p-instructor-preset','p-contact-preset'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value;
+    while (sel.options.length > 1) sel.remove(1);
+    if (id === 'p-worker-preset') {
+      WORKERS.forEach(n => sel.add(new Option(n, n)));
+    } else {
+      INSTRUCTORS.forEach(s => sel.add(new Option(s.name, s.name)));
+    }
+    sel.value = WORKERS.includes(cur) || INSTRUCTORS.find(s=>s.name===cur) ? cur : '';
   });
+  const swSel = document.getElementById('nm-instructor-sw');
+  if (swSel) {
+    while (swSel.options.length > 1) swSel.remove(1);
+    SOFTWARE_LIST.forEach(sw => swSel.add(new Option(sw, sw)));
+  }
+}
 
-  INSTRUCTORS.forEach(s => {
-    iSelect.add(new Option(s.name, s.name));
-    cSelect.add(new Option(s.name, s.name));
+window.addEventListener('DOMContentLoaded', () => {
+  rebuildSelects();
+  loadFromFirebase();
+  document.getElementById('nm-instructor-sw').addEventListener('change', function(){
+    if (!this.value) return;
+    addNmInstructorSw(this.value);
+    this.value = '';
   });
 });
+
+// ── 名前管理モーダル ──
+let nmInstructorSwPending = [];
+
+function openNameManager() {
+  document.getElementById('nmOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderNmWorkers();
+  renderNmInstructors();
+}
+function closeNameManager() {
+  document.getElementById('nmOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  nmInstructorSwPending = [];
+  document.getElementById('nm-instructor-name').value = '';
+  document.getElementById('nm-instructor-sw').value = '';
+  renderNmInstructorSwPreview();
+}
+function switchNmTab(tab, el) {
+  document.querySelectorAll('.nm-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nm-tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('nm-' + tab).classList.add('active');
+}
+
+// 利用者
+function renderNmWorkers() {
+  const c = document.getElementById('nm-worker-chips');
+  const cnt = document.getElementById('nm-worker-count');
+  if (!c) return;
+  cnt.textContent = `（${WORKERS.length}名）`;
+  if (WORKERS.length === 0) { c.innerHTML = '<span class="nm-empty">利用者が登録されていません</span>'; return; }
+  c.innerHTML = WORKERS.map((n,i) => `
+    <div class="nm-chip">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      ${escapeHtml(n)}
+      <button onclick="removeNmWorker(${i})" title="削除">×</button>
+    </div>`).join('');
+}
+function addNmWorker() {
+  const inp = document.getElementById('nm-worker-input');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (WORKERS.includes(name)) { inp.select(); return; }
+  WORKERS.push(name);
+  WORKERS.sort((a,b) => a.localeCompare(b, 'ja'));
+  saveLists(); rebuildSelects(); renderNmWorkers();
+  inp.value = '';
+}
+function removeNmWorker(i) {
+  if (!confirm(`「${WORKERS[i]}」を削除しますか？`)) return;
+  WORKERS.splice(i, 1);
+  saveLists(); rebuildSelects(); renderNmWorkers();
+}
+function resetNmWorkers() {
+  if (!confirm('利用者リストをデフォルトに戻しますか？\n（現在のリストは消えます）')) return;
+  WORKERS.length = 0;
+  DEFAULT_WORKERS.forEach(n => WORKERS.push(n));
+  saveLists(); rebuildSelects(); renderNmWorkers();
+}
+
+// 指示者
+function renderNmInstructors() {
+  const c = document.getElementById('nm-instructor-chips');
+  const cnt = document.getElementById('nm-instructor-count');
+  if (!c) return;
+  cnt.textContent = `（${INSTRUCTORS.length}名）`;
+  if (INSTRUCTORS.length === 0) { c.innerHTML = '<span class="nm-empty">指示者が登録されていません</span>'; return; }
+  c.innerHTML = INSTRUCTORS.map((s,i) => `
+    <div class="nm-chip instructor-chip" style="flex-direction:column;align-items:flex-start;border-radius:10px;padding:8px 10px">
+      <div style="display:flex;align-items:center;gap:6px;width:100%">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <strong style="font-size:.85rem">${escapeHtml(s.name)}</strong>
+        <button onclick="removeNmInstructor(${i})" title="削除" style="margin-left:auto">×</button>
+      </div>
+      ${s.software && s.software.length ? `<div class="nm-sw-tags" style="margin-top:4px">${s.software.map(sw=>`<span class="nm-sw-tag">${escapeHtml(sw)}</span>`).join('')}</div>` : '<span style="font-size:.68rem;color:var(--text3);margin-top:2px">ソフト未設定</span>'}
+    </div>`).join('');
+}
+function addNmInstructorSw(sw) {
+  if (!nmInstructorSwPending.includes(sw)) nmInstructorSwPending.push(sw);
+  renderNmInstructorSwPreview();
+}
+function renderNmInstructorSwPreview() {
+  const wrap = document.getElementById('nm-instructor-sw-preview');
+  const tags = document.getElementById('nm-instructor-sw-selected');
+  if (!wrap || !tags) return;
+  if (nmInstructorSwPending.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'flex';
+  tags.innerHTML = nmInstructorSwPending.map((sw,i) =>
+    `<span class="nm-sw-tag" style="display:inline-flex;align-items:center;gap:3px">${escapeHtml(sw)}<button onclick="nmInstructorSwPending.splice(${i},1);renderNmInstructorSwPreview()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:11px;padding:0 2px;line-height:1">×</button></span>`
+  ).join('');
+}
+function addNmInstructor() {
+  const name = document.getElementById('nm-instructor-name').value.trim();
+  if (!name) { document.getElementById('nm-instructor-name').focus(); return; }
+  if (INSTRUCTORS.find(s => s.name === name)) {
+    document.getElementById('nm-instructor-name').select(); return;
+  }
+  INSTRUCTORS.push({ name, software: [...nmInstructorSwPending] });
+  INSTRUCTORS.sort((a,b) => a.name.localeCompare(b.name, 'ja'));
+  nmInstructorSwPending = [];
+  document.getElementById('nm-instructor-name').value = '';
+  renderNmInstructorSwPreview();
+  saveLists(); rebuildSelects(); renderNmInstructors();
+}
+function removeNmInstructor(i) {
+  if (!confirm(`「${INSTRUCTORS[i].name}」を削除しますか？`)) return;
+  INSTRUCTORS.splice(i, 1);
+  saveLists(); rebuildSelects(); renderNmInstructors();
+}
+function resetNmInstructors() {
+  if (!confirm('指示者リストをデフォルトに戻しますか？\n（現在のリストは消えます）')) return;
+  INSTRUCTORS.length = 0;
+  DEFAULT_INSTRUCTORS.forEach(s => INSTRUCTORS.push({...s, software:[...s.software]}));
+  saveLists(); rebuildSelects(); renderNmInstructors();
+}
 
 // 問い合わせ先トグル
 function toggleContactBlock(include) {
