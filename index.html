@@ -347,11 +347,14 @@ select option{background:var(--surface2)}
         </div>
       </div>
       <label id="checkin-label" style="cursor:pointer;display:flex;align-items:center;gap:9px;user-select:none;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:9px 13px;transition:all .15s;margin-top:2px">
-        <input type="checkbox" id="f-checkin" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0" onchange="checkInRequested=this.checked;document.getElementById('checkin-label').style.borderColor=this.checked?'var(--accent)':'var(--border2)';document.getElementById('checkin-label').style.background=this.checked?'var(--accent-dim)':'var(--surface2)';update()">
+        <input type="checkbox" id="f-checkin" style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0" onchange="checkInRequested=this.checked;document.getElementById('checkin-label').style.borderColor=this.checked?'var(--accent)':'var(--border2)';document.getElementById('checkin-label').style.background=this.checked?'var(--accent-dim)':'var(--surface2)';document.getElementById('checkin-notes-wrap').style.display=this.checked?'':'none';update()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--accent2)"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <span style="font-size:.83rem;color:var(--text)">作業中に定期的な声かけを希望する</span>
         <span style="font-size:.7rem;color:var(--text3);margin-left:auto">進捗確認・相談OK</span>
       </label>
+      <div id="checkin-notes-wrap" style="display:none;margin-top:4px">
+        <input type="text" id="f-checkin-notes" placeholder="例：ヘッドホン中はNG、30分に1回でOK、chatで声かけて" oninput="update()">
+      </div>
     </div>
   </div>
 
@@ -927,7 +930,7 @@ select option{background:var(--surface2)}
             <div class="spec-field-label" style="color:#6c5ce7">声かけ希望</div>
             <div class="spec-field-value" style="color:#5a4dd6;display:flex;align-items:center;gap:7px">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              作業中に定期的な進捗確認・声かけをお願いします
+              <span id="s-checkin-text">作業中に定期的な進捗確認・声かけをお願いします</span>
             </div>
           </div>
         </div>
@@ -1324,6 +1327,13 @@ function update() {
   // 声かけ希望
   const checkinField = document.getElementById('s-checkin-field');
   if(checkinField) checkinField.style.display = checkInRequested ? '' : 'none';
+  if(checkInRequested) {
+    const notes = val('f-checkin-notes');
+    const checkinText = document.getElementById('s-checkin-text');
+    if(checkinText) checkinText.textContent = notes
+      ? `作業中に定期的な進捗確認・声かけをお願いします（${notes}）`
+      : '作業中に定期的な進捗確認・声かけをお願いします';
+  }
 
   // Hide all dynamic previews
   ['illust','design','3dcg','video','image','other'].forEach(t=>show('sp-'+t,false));
